@@ -1,6 +1,6 @@
 ﻿//***************************************************************************************************
-//Name of File:     LastFMModelHelper.cs
-//Description:      The LastFMModelHelper provides loading and mapping functionality for the LastFMViewModel.
+//Name of File:     LastFMModelDataService.cs
+//Description:      The LastFMModelDataService provides loading and mapping functionality for the LastFMViewModel.
 //Author:           Tim Harrison
 //Date of Creation: Apr/May 2013.
 //
@@ -22,17 +22,17 @@ using Core.Model;
 using Core.Factories;
 using Core.Services;
 
-namespace THMusic.Helpers
+namespace THMusic.Data
 {
     /// <summary>
-    /// This <c>LastFMModelHelper</c> class is responsible for managing all
+    /// This <c>LastFMModelDataService</c> class is responsible for managing all
     /// access to LastFMService, and mapping the results to the
     /// AlbumModel of the Ui, which supports the LastFMViewModel as well as
     /// the AlbumsViewModel.  
     /// The LastFMViewModel is part of the MVVM pattern implemented within
     /// the UI, and supported by the MVMLight framework.
     /// </summary>
-    public class LastFMModelHelper: ILastFMModelHelper
+    public class LastFMModelDataService : ILastFMModelDataService
     {
          /// <summary>
         /// Provides access to the resouce files, Localisation, used
@@ -54,7 +54,7 @@ namespace THMusic.Helpers
         /// </summary>
         /// <param name="AlbumRepository">The injected AlbumRepository instance</param>
         /// <param name="LastFMService">The injected LastFMService instance</param>
-        public LastFMModelHelper(IAlbumRepository AlbumRepository, 
+        public LastFMModelDataService(IAlbumRepository AlbumRepository, 
             AbstractFactory<Album> AlbumFactory, 
             AbstractFactory<Image> ImageFactory,
             AbstractFactory<Track> TrackFactory,
@@ -94,7 +94,7 @@ namespace THMusic.Helpers
         /// with the corresponding group category.
         /// </summary>
         /// <returns></returns>
-        public  async Task<AlbumModel> CallLastFMAlbumInfoAsync(string ArtistName, string AlbumName)  //, ILastFMService lastFMService)
+        public  async Task<AlbumModel> GetLastFMAlbumInfoAsync(string ArtistName, string AlbumName)  //, ILastFMService lastFMService)
         {
             //  Call the LastFMService 
             //  Check, this will include the returned information for the Artist/Album combination.

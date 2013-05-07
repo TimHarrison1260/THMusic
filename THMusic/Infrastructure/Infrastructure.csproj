@@ -115,6 +115,8 @@
     <Compile Include="Repositories\ArtistRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\AlbumRepository.cs" />
+    <Compile Include="Repositories\PlaylistRepository.cs" />
+    <Compile Include="Repositories\GenreRepository.cs" />
     <Compile Include="Repositories\PersistenceRepository.cs" />
     <Compile Include="Services\LastFmProxy.cs" />
   </ItemGroup>

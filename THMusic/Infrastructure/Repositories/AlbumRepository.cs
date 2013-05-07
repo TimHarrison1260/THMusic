@@ -16,6 +16,12 @@ using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Model;
 
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
+using System.IO;
+
+
+
 namespace Infrastructure.Repositories
 {
     /// <summary>
@@ -68,7 +74,7 @@ namespace Infrastructure.Repositories
             //  Execute the linq query as a parallel query, to improve async behaviour
             //  NB! This does NOT remove the warning about the method 'lacking await'
             //      and therefore will run synchronously.
-            var albums = _unitOrWork.Albums.AsParallel()
+            var albums = _unitOrWork.Albums
                 .Where(a => a.Artist.Id == ArtistId);
             return albums;
         }
@@ -91,7 +97,10 @@ namespace Infrastructure.Repositories
         /// <returns>a collection of Album classes.</returns>
         public async Task<IEnumerable<Album>> GetAlbumsForGenre(int GenreId)
         {
-            throw new NotImplementedException();
+            var albums = _unitOrWork.Genres
+                .Where(g => g.Id == GenreId)
+                .SelectMany(g => g.Albums);
+            return albums;
         }
 
         /// <summary>
@@ -101,7 +110,52 @@ namespace Infrastructure.Repositories
         /// <returns>A collection of Albums</returns>
         public async Task<IEnumerable<Album>> GetAlbumsForPlaylist(int PlaylistId)
         {
-            throw new NotImplementedException();
+            //  Horrible bit of linq and process here, to supply for each album
+            //  belonging to a track in the playlist, contining only those 
+            //  tracks in the playlist.
+
+            //  Get tracks.
+            var tracks = _unitOrWork.PlayLists
+                .Where(p => p.Id == PlaylistId)
+                .SelectMany(p => p.Tracks);
+            //  Get a distinct list of albums
+
+            //  NB:  THIS WILL ACTUALLY UPDATE THE CONTEXT, NOT WHAT'S NEEDED
+            //      THEREFORE MAKE A COMPLETE COPY OF THE SELECTED ALBUMS
+            //      AND FORCE THE LINQ QUERY TO ENUMERATE THE COLLECTION
+            //      TO ENSURE IT RUNS NOW AND WE GET A COMPLETELY NEW INSTANCE.
+            //      A shallow copy is enough, here, but without the tracks, these
+            //      must be a completely new instance that can have only the 
+            //      selected tracks added.  This completely avoids unintended
+            //      updating of the DomainModel.  the album is a complely new
+            //      instance, but the referenced objects are not new, except f
+            //      for the tracks.
+            var albums = tracks
+                .Select(a => a.Album)
+                .Distinct();
+
+            //  Create a list of cloned albums, for the playlists.
+            IList<Album> playlistAlbums = new List<Album>();
+            foreach (var a in albums)
+            {
+                var clonedAlbum = a.Clone();
+                playlistAlbums.Add(clonedAlbum);
+            }
+
+            //  Now set the album.Tracks property to only contain the above tracks
+            foreach (var playlistAlbum in playlistAlbums)
+            {
+                var playlistTracks = tracks.Where(t => t.Album.Id == playlistAlbum.Id);
+                playlistAlbum.Tracks = playlistTracks.ToList<Track>();
+            }
+
+            //return albums;
+
+            return playlistAlbums;
         }
+
+
+
+
     }
 }

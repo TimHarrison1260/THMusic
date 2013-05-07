@@ -25,7 +25,7 @@ namespace UnitTests
             var _artistRepository = new ArtistRepository(_db);
 
             //  Action
-            var Artists = await _artistRepository.GetAllArtists();
+            var Artists = await _artistRepository.GetAll();
 
 
 

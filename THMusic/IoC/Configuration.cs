@@ -34,6 +34,8 @@ namespace IoC
         {
             //  Register the Repositories
             iocKernel.Register<IArtistRepository, ArtistRepository>();
+            iocKernel.Register<IGenreRepository, GenreRepository>();
+            iocKernel.Register<IPlaylistRepository, PlaylistRepository>();
             iocKernel.Register<IAlbumRepository, AlbumRepository>();
 
             //  A special repository to expose the persistence methods so

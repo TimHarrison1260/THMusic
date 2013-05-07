@@ -1,6 +1,6 @@
 ﻿//***************************************************************************************************
-//Name of File:     ArtistRepository.cs
-//Description:      The implementation of the interface describing the ArtistRepository.
+//Name of File:     GenreRepository.cs
+//Description:      The implementation of the interface describing the GenreRepository.
 //Author:           Tim Harrison
 //Date of Creation: Apr/May 2013.
 //
@@ -19,16 +19,16 @@ using Core.Model;
 namespace Infrastructure.Repositories
 {
     /// <summary>
-    /// This <c>ArtistRepository</c> class is responsible for managing access to the
-    /// the In-Memory context for the Music collection, specifially for the Artists
+    /// This <c>GenreRepository</c> class is responsible for managing access to the
+    /// the In-Memory context for the Music collection, specifially for the Genres
     /// contained within the collection.
     /// </summary>
     /// <remarks>
     /// This class inherits from the <see cref="Infrastructure.Repositories.BaseRepository"/>
     /// which is generic.  It passes the Artist class in as the type.
     /// <para>
-    /// It also implements the IArtistRepository interface which separates the concerns from
-    /// the rest of the application, from this implementation.  The IArtistRepository interface,
+    /// It also implements the IGenreRepository interface which separates the concerns from
+    /// the rest of the application, from this implementation.  The IGenreRepository interface,
     /// in turn inherits from the IGroupRepository.  This base interface defines the methods 
     /// required for this interface and allows the instance of this repository to be passed 
     /// into generic routines that expect an implementation of the IGroupRepository interface.
@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories
     /// classes and associated repositories involved in grouping albums together.
     /// </para>
     /// </remarks>
-    public class ArtistRepository: BaseRepository<Artist>, IArtistRepository
+    public class GenreRepository: BaseRepository<Genre>, IGenreRepository
     {
         /// <summary>
         /// Contains the context for the datastore (loaded from the XML file)
@@ -48,8 +48,8 @@ namespace Infrastructure.Repositories
         /// the MVVMLight SimpleIoC container.
         /// </summary>
         /// <param name="UnitOfWork">Injected instance of the Context</param>
-        public ArtistRepository(IUnitOfWork UnitOfWork)
-            :base()
+        public GenreRepository(IUnitOfWork UnitOfWork)
+            : base()
         {
             if (UnitOfWork == null)
                 throw new ArgumentNullException("UnitOrWork", "No valid UnitOfWork defined for ArtistRepository");
@@ -60,10 +60,10 @@ namespace Infrastructure.Repositories
         /// Gets all artists defined in the Context
         /// </summary>
         /// <returns>An IEnumerable collection of Artist classes</returns>
-        public async Task<IEnumerable<Artist>> GetAll()
+        public async Task<IEnumerable<Genre>> GetAll()
         {
-            var artists = _unitOrWork.Artists;
-            return artists;
+            var genres = _unitOrWork.Genres;
+            return genres;
         }
 
         /// <summary>
@@ -78,8 +78,9 @@ namespace Infrastructure.Repositories
         {
             //  This query will not support parallelism, as it makes use of
             //  the SelectMany statement which is not supported by PLinq yet.
-            var image = _unitOrWork.Albums
-                .Where(a => a.Artist.Id == Id)
+            var image = _unitOrWork.Genres
+                .Where(g => g.Id == Id)
+                .SelectMany(a => a.Albums)
                 .SelectMany(a => a.Images)
                 .Where(i => i.Size == ImageSizeEnum.Large)
                 .First();
@@ -88,7 +89,7 @@ namespace Infrastructure.Repositories
 
         /// <summary>
         /// Gets the total Duration of all albums and tracks
-        /// belonging to the artist, for the Artist Group.
+        /// belonging to the artist, for the Artist Group.a => a
         /// </summary>
         /// <param name="Id">The Id of the Artist</param>
         /// <returns>The total duration of the albums and tracks</returns>
@@ -96,8 +97,15 @@ namespace Infrastructure.Repositories
         {
             //  This query will not support parallelism, as it makes use of
             //  the SelectMany statement which is not supported by PLinq yet.
-            var duration = _unitOrWork.Albums
-                .Where(a => a.Artist.Id == Id)
+
+            //var duration = _unitOrWork.Albums
+            //    .Where(a => a.Artist.Id == Id)
+            //    .SelectMany(a => a.Tracks)
+            //    .Sum(t => t.Duration.Ticks);
+
+            var duration = _unitOrWork.Genres
+                .Where(g => g.Id == Id)
+                .SelectMany(a => a.Albums)
                 .SelectMany(a => a.Tracks)
                 .Sum(t => t.Duration.Ticks);
             return TimeSpan.FromTicks(duration);
@@ -110,8 +118,13 @@ namespace Infrastructure.Repositories
         /// <returns>the count of albums belonging to the Artist</returns>
         public async Task<int> GetAlbums(int Id)
         {
-            var number = _unitOrWork.Albums.AsParallel()
-                .Where(a => a.Artist.Id == Id)
+            //var number = _unitOrWork.Albums.AsParallel()
+            //    .Where(a => a.Artist.Id == Id)
+            //    .Count();
+
+            var number = _unitOrWork.Genres
+                .Where(g => g.Id == Id)
+                .SelectMany(a => a.Albums)
                 .Count();
             return number;
         }
@@ -125,8 +138,14 @@ namespace Infrastructure.Repositories
         {
             //  This query will not support parallelism, as it makes use of
             //  the SelectMany statement which is not supported by PLinq yet.
-            var number = _unitOrWork.Albums
-                .Where(a => a.Artist.Id == Id)
+            //var number = _unitOrWork.Albums
+            //    .Where(a => a.Artist.Id == Id)
+            //    .SelectMany(a => a.Tracks)
+            //    .Count();
+
+            var number = _unitOrWork.Genres
+                .Where(g => g.Id == Id)
+                .SelectMany(g => g.Albums)
                 .SelectMany(a => a.Tracks)
                 .Count();
             return number;
@@ -137,13 +156,13 @@ namespace Infrastructure.Repositories
         /// </summary>
         /// <param name="Id">The id of the Artist</param>
         /// <returns>The Artist object</returns>
-        public async Task<Artist> GetById(int Id)
+        public async Task<Genre> GetById(int Id)
         {
             //  Difficult to see how parallelism would benefit here,
             //  only a single artist is to be returned
-            var artist = _unitOrWork.Artists
-                .FirstOrDefault(a => a.Id == Id);
-            return artist;
+            var genre = _unitOrWork.Genres
+                .FirstOrDefault(g => g.Id == Id);
+            return genre;
         }
 
         /// <summary>
@@ -151,7 +170,7 @@ namespace Infrastructure.Repositories
         /// </summary>
         /// <param name="Name">the Name of the Artist</param>
         /// <returns>The Artist object</returns>
-        public async Task<Artist> GetByName(string Name)
+        public async Task<Genre> GetByName(string Name)
         {
             throw new NotImplementedException();
         }

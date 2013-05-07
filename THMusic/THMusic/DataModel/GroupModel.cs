@@ -153,16 +153,5 @@ namespace THMusic.DataModel
         }
     }
 
-    /// <summary>
-    /// This <c>GroupTypeEnum</c> enumeration defines the type of Groupings
-    /// for the albums the application suppoert.  The types can be Artist, 
-    /// Genre or Playlist.
-    /// </summary>
-    public enum GroupTypeEnum
-    {
-        Artist,
-        Genre,
-        Playlist
-    }
 
 }

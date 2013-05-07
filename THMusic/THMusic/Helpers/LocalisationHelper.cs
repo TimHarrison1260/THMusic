@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Globalization.DateTimeFormatting;
 
+using THMusic.DataModel;        //  access the GroupTypeEnum
 
 namespace THMusic.Helpers
 {
@@ -67,21 +68,60 @@ namespace THMusic.Helpers
         /// <param name="number"></param>
         /// <param name="duration"></param>
         /// <returns>The formatted string.</returns>
-        public static string LocaliseDescription(int number, TimeSpan duration)
+        public static string LocaliseDescription(int number, TimeSpan duration, GroupTypeEnum groupType)
         {
             StringBuilder bldr = new StringBuilder();
             bldr.AppendFormat("{0:d}", number);
 
-            var counterStr = _loader.GetString("GroupCount");
+            //  Get the localised text that joings the number.
+            var counterStr = _loader.GetString("GroupCount");            
+            if (groupType == GroupTypeEnum.Playlist)
+                counterStr = _loader.GetString("GroupPlaylistCount");
             bldr.AppendFormat(" {0} ", counterStr);
 
-            TimeSpan totalDuration = duration;
-            bldr.AppendFormat("{0:t}", duration);
+//            TimeSpan totalDuration = duration;
+            string localDuration = LocaliseDuration(duration);
+//            bldr.AppendFormat("{0:t}", duration);
+            bldr.Append(localDuration);
 
             var durationStr = _loader.GetString("GroupDurationMins");
             bldr.AppendFormat(" {0}", durationStr);
 
             return bldr.ToString();
+        }
+
+        /// <summary>
+        /// Localises the Application name and includes the current grouping
+        /// on the MainPage
+        /// </summary>
+        /// <param name="groupType">The current grouping</param>
+        /// <returns>appName string</returns>
+        public static string LocaliseAppName(GroupTypeEnum groupType)
+        {
+            StringBuilder bldr = new StringBuilder();
+            bldr.AppendFormat("{0} (", _loader.GetString("AppName"));
+            bldr.Append(LocaliseGroupTypeEnum(groupType));
+            bldr.Append(")");
+            return bldr.ToString();
+        }
+
+        /// <summary>
+        /// Localises the string representation of the GroupTypeEnum value
+        /// </summary>
+        /// <param name="groupType">The GroupTypeEnum value</param>
+        /// <returns>Localised string representation</returns>
+        public static string LocaliseGroupTypeEnum(GroupTypeEnum groupType)
+        {
+            switch (groupType)
+            {
+                case GroupTypeEnum.Artist:
+                    return _loader.GetString("GroupTypeEnumArtist");
+                case GroupTypeEnum.Genre:
+                    return _loader.GetString("GroupTypeEnumGenre");
+                case GroupTypeEnum.Playlist:
+                    return _loader.GetString("GroupTypeEnumPlaylist");
+            }
+            return string.Empty;
         }
 
     }

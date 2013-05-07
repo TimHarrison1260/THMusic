@@ -17,7 +17,7 @@
         <StackPanel x:Name="LeftCommands" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
             <Button x:Name="ImportLastFM" HorizontalAlignment="Left" Style="{StaticResource DownloadAppBarButtonStyle}"
                     Command="{Binding ImportLastFMCommand}" x:Uid="ImportLastFMButton" />
-            <Button x:Name="ImportMP3" HorizontalAlignment="Left" Style="{StaticResource MusicInfoAppBarButtonStyle}" 
+            <Button x:Name="ImportMP3" HorizontalAlignment="Left" Style="{StaticResource MusicInfoAppBarButtonStyle}"
                         Command="{Binding ImportMP3Command}" x:Uid="ImportMP3Button" />
         </StackPanel>
         <StackPanel x:Name="RightCommands" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">

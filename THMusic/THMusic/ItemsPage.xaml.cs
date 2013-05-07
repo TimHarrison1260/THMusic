@@ -27,6 +27,10 @@ namespace THMusic
     /// </summary>
     public sealed partial class ItemsPage : THMusic.Common.LayoutAwarePage
     {
+        //  A bit of a hack to control loading the first time, so I don't have to
+        //  have any async calls to load methods from within the ViewModel ctor.
+        private static bool IsViewModelInitialised = false;
+
         public ItemsPage()
         {
             this.InitializeComponent();
@@ -44,10 +48,11 @@ namespace THMusic
         protected async override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             //  If the navigation parameter is "AlbumImportedOK" Then we must refresh the data in the viewmodel.
-            if (navigationParameter == "AlbumImportedOK")   // Not that keen on magic Strings, but MS template does.
+            if (!IsViewModelInitialised || (string)navigationParameter == "AlbumImportedOK")   // Not that keen on magic Strings, but MS template does.
             {
                 var mainVM = SimpleIoc.Default.GetInstance<MainViewModel>();
                 await mainVM.RefreshData();
+                IsViewModelInitialised = true;      // Ensure this doesnt run again, unless specifically requested.
             }
 
         }

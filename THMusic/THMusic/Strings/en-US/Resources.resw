@@ -118,8 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppName" xml:space="preserve">
-    <value>THMusic</value>
+    <value>THMusic Collection</value>
     <comment>Used in the title for each page.</comment>
+  </data>
+  <data name="ArtistGroupingRadioButton.Content" xml:space="preserve">
+    <value>Artist</value>
+    <comment>Description of radio button on Main Page, Top Appbar</comment>
+  </data>
+  <data name="GenreGroupingRadioButton.Content" xml:space="preserve">
+    <value>Genre</value>
+    <comment>Description of radio button on Main Page, Top Appbar</comment>
   </data>
   <data name="GroupCount" xml:space="preserve">
     <value>albums</value>
@@ -132,6 +140,14 @@
   <data name="GroupDurationMins" xml:space="preserve">
     <value>mins</value>
     <comment>Used in code, to give the Group totals string for display on the Group view</comment>
+  </data>
+  <data name="GroupingRadioButtonsTitle.Text" xml:space="preserve">
+    <value>Show Albums by: </value>
+    <comment>The title next to the Grouping Radio Buttons, Main Page, Top Appbar</comment>
+  </data>
+  <data name="GroupPlaylistCount" xml:space="preserve">
+    <value>tracks</value>
+    <comment>Used for group totlas specifically the Playlist totalks as it works with tracks</comment>
   </data>
   <data name="ImportLastFMButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Search LastFM</value>
@@ -148,6 +164,14 @@
   <data name="LastFMSearchButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Search LastFM</value>
   </data>
+  <data name="PlaylistGroupingRadioButton.Content" xml:space="preserve">
+    <value>My Playlists</value>
+    <comment>Description of radio button on Main Page, Top Appbar</comment>
+  </data>
+  <data name="RefreshGroupingButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Refresh Albums</value>
+    <comment>The "Refresh" button which is used to refresh the data when the album grouping selection has been changed, Main page, Top Appbar</comment>
+  </data>
   <data name="SearchAlbumLabel.Text" xml:space="preserve">
     <value>Enter the name of the Album you want to search for</value>
     <comment>User instruction on hwat album to enter for the search criteria</comment>
@@ -163,5 +187,17 @@
   <data name="SearchLastFMTitle.Text" xml:space="preserve">
     <value>Search Last FM for an Album</value>
     <comment>The title of the search page for Last FM</comment>
+  </data>
+  <data name="GroupTypeEnumArtist" xml:space="preserve">
+    <value>Artists</value>
+    <comment>A localised string representing the enumeration GroupTypeEnum</comment>
+  </data>
+  <data name="GroupTypeEnumGenre" xml:space="preserve">
+    <value>Genres</value>
+    <comment>A localised string representing the enumeration GroupTypeEnum</comment>
+  </data>
+  <data name="GroupTypeEnumPlaylist" xml:space="preserve">
+    <value>Playlists</value>
+    <comment>A localised string representing the enumeration GroupTypeEnum</comment>
   </data>
 </root>

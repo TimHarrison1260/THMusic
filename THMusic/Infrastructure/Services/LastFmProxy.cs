@@ -76,124 +76,141 @@ namespace Infrastructure.Services
             //  returns XML serialised data.
             //  We could also have the results returned in JSON format, but we would need
             //  a different parsers.  C# is easiest with XML at this level.
-            var result = XElement.Load(url);
 
-            //  TODO: Refactor this into more specific methods, and keep this one to combind the individual methods.
-
-            //  Get the google statues returned
-            var status = (string)result.Attribute("status");
-            if (status == "ok")
+            try
             {
-                //  Deserialize the result
-                //  Album specific informtaion
-                LastFMAlbumInfo album = new LastFMAlbumInfo();
-                var albumElement = result.Element("album");
-                album.name = (string)albumElement.Element("name");
 
-                album.id = (string)albumElement.Element("id");
-                album.mbid = (string)albumElement.Element("mbid");
-                album.url = (string)albumElement.Element("url");
-                album.releasedDate = (string)albumElement.Element("releasedate");
 
-                // Artist stuff.  Only name here, tracks hold url etc.
-                album.artist = new LastFMArtist();
-                album.artist.name = (string)albumElement.Element("artist");
+                var result = XElement.Load(url);
 
-                //  Artwork
-                List<LastFMArtwork> images = new List<LastFMArtwork>();
-                var imageElements = albumElement.Descendants("image").Select(i => i);
-                if (imageElements != null)
+                //  TODO: Refactor this into more specific methods, and keep this one to combind the individual methods.
+
+                //  Get the google statues returned
+                var status = (string)result.Attribute("status");
+                if (status == "ok")
                 {
-                    foreach (var i in imageElements)
+                    //  Deserialize the result
+                    //  Album specific informtaion
+                    LastFMAlbumInfo album = new LastFMAlbumInfo();
+                    //  Set the status of the call
+                    album.Status.code = status;
+
+                    var albumElement = result.Element("album");
+                    album.name = (string)albumElement.Element("name");
+
+                    album.id = (string)albumElement.Element("id");
+                    album.mbid = (string)albumElement.Element("mbid");
+                    album.url = (string)albumElement.Element("url");
+                    album.releasedDate = (string)albumElement.Element("releasedate");
+
+                    // Artist stuff.  Only name here, tracks hold url etc.
+                    album.artist = new LastFMArtist();
+                    album.artist.name = (string)albumElement.Element("artist");
+
+                    //  Artwork
+                    List<LastFMArtwork> images = new List<LastFMArtwork>();
+                    var imageElements = albumElement.Descendants("image").Select(i => i);
+                    if (imageElements != null)
                     {
-                        var image = new LastFMArtwork();
-                        image.size = (string)i.Attribute("size");
-                        image.imageUrl = (string)i;
-                        images.Add(image);
+                        foreach (var i in imageElements)
+                        {
+                            var image = new LastFMArtwork();
+                            image.size = (string)i.Attribute("size");
+                            image.imageUrl = (string)i;
+                            images.Add(image);
+                        }
                     }
-                }
-                album.images = images;
+                    album.images = images;
 
-                //  Additional basic album information
-                album.listeners = (string)albumElement.Element("listeners");
-                album.playcount = (string)albumElement.Element("playcount");
+                    //  Additional basic album information
+                    album.listeners = (string)albumElement.Element("listeners");
+                    album.playcount = (string)albumElement.Element("playcount");
 
-                //  Tracks
-                List<LastFMTrack> tracks = new List<LastFMTrack>();
-                var tracksElement = albumElement.Element("tracks");
-                if (tracksElement != null)
-                {
-                    var trackElements = tracksElement.Descendants("track").Select(t => t);
-                    foreach (var t in trackElements)
+                    //  Tracks
+                    List<LastFMTrack> tracks = new List<LastFMTrack>();
+                    var tracksElement = albumElement.Element("tracks");
+                    if (tracksElement != null)
                     {
-                        var track = new LastFMTrack();
-                        track.rank = (string)t.Attribute("rank");
-                        track.name = (string)t.Element("name");
-                        track.duration = (string)t.Element("duration");
-                        track.mbid = (string)t.Element("mbid");
-                        track.url = (string)t.Element("url");
-                        track.streamable = (string)t.Element("streamable");
-                        track.streamFullTrack = (string)t.Element("streamable").Attribute("fulltrack");
+                        var trackElements = tracksElement.Descendants("track").Select(t => t);
+                        foreach (var t in trackElements)
+                        {
+                            var track = new LastFMTrack();
+                            track.rank = (string)t.Attribute("rank");
+                            track.name = (string)t.Element("name");
+                            track.duration = (string)t.Element("duration");
+                            track.mbid = (string)t.Element("mbid");
+                            track.url = (string)t.Element("url");
+                            track.streamable = (string)t.Element("streamable");
+                            track.streamFullTrack = (string)t.Element("streamable").Attribute("fulltrack");
 
-                        var trackArtist = new LastFMArtist();
-                        var artistElement = t.Element("artist");
-                        trackArtist.name = (string)artistElement.Element("name");
-                        trackArtist.mbid = (string)artistElement.Element("mbid");
-                        trackArtist.url = (string)artistElement.Element("url");
+                            var trackArtist = new LastFMArtist();
+                            var artistElement = t.Element("artist");
+                            trackArtist.name = (string)artistElement.Element("name");
+                            trackArtist.mbid = (string)artistElement.Element("mbid");
+                            trackArtist.url = (string)artistElement.Element("url");
 
-                        track.artist = trackArtist;
+                            track.artist = trackArtist;
 
-                        tracks.Add(track);
+                            tracks.Add(track);
 
-                        //  Add the artist for the Track to the Album, the album only has the artist name.
-                        if (album.artist.mbid == null || album.artist.mbid == string.Empty)
-                            album.artist.mbid = trackArtist.mbid;
-                        if (album.artist.url == null || album.artist.url == string.Empty)
-                            album.artist.url = trackArtist.url;
+                            //  Add the artist for the Track to the Album, the album only has the artist name.
+                            if (album.artist.mbid == null || album.artist.mbid == string.Empty)
+                                album.artist.mbid = trackArtist.mbid;
+                            if (album.artist.url == null || album.artist.url == string.Empty)
+                                album.artist.url = trackArtist.url;
+                        }
                     }
-                }
-                album.tracks = tracks;
+                    album.tracks = tracks;
 
-                //  Tag information
-                List<LastFMTag> tags = new List<LastFMTag>();
-                var topTags = albumElement.Element("toptags");
-                if (topTags != null)
-                {
-                    var tagElements = topTags.Descendants("tag").Select(t => t);
-                    foreach (var t in tagElements)
+                    //  Tag information
+                    List<LastFMTag> tags = new List<LastFMTag>();
+                    var topTags = albumElement.Element("toptags");
+                    if (topTags != null)
                     {
-                        var tag = new LastFMTag();
-                        tag.name = (string)t.Element("name");
-                        tag.url = (string)t.Element("url");
-                        tags.Add(tag);
+                        var tagElements = topTags.Descendants("tag").Select(t => t);
+                        foreach (var t in tagElements)
+                        {
+                            var tag = new LastFMTag();
+                            tag.name = (string)t.Element("name");
+                            tag.url = (string)t.Element("url");
+                            tags.Add(tag);
+                        }
                     }
-                }
-                album.tags = tags;
+                    album.tags = tags;
 
-                //  Wiki information
-                var wiki = new LastFMWiki();
-                var wikiElement = albumElement.Element("wiki");
-                if (wikiElement != null)
+                    //  Wiki information
+                    var wiki = new LastFMWiki();
+                    var wikiElement = albumElement.Element("wiki");
+                    if (wikiElement != null)
+                    {
+                        wiki.published = (string)wikiElement.Element("published");
+                        wiki.summary = (string)wikiElement.Element("summary");
+                        wiki.content = (string)wikiElement.Element("content");
+                    }
+                    album.wiki = wiki;
+
+
+                    return album;
+                }
+                else
                 {
-                    wiki.published = (string)wikiElement.Element("published");
-                    wiki.summary = (string)wikiElement.Element("summary");
-                    wiki.content = (string)wikiElement.Element("content");
+                    //  Get the message from the returned string
+                    var error = new LastFMAlbumInfo();
+                    var errorElement = result.Element("error");
+                    error.Status.code = (string)errorElement.Attribute("code");
+                    error.Status.message = (string)errorElement;
+                    return error;
                 }
-                album.wiki = wiki;
-
-
-                return album;
             }
-            else
+            catch (Exception ex)
             {
-                //  Get the message from the returned string
-                LastFMError error = new LastFMError();
-                var errorElement = result.Element("error");
-                error.code = (string)errorElement.Attribute("code");
-                error.message = (string)errorElement;
-
-                throw new Exception(string.Format("There were problems getting the Album information from the LastFM\r\nReturn Code: {0}\r\nMEssage: {1}", error.code, error.message));
+                //  Error encountered from http server
+                var error = new LastFMAlbumInfo();
+                error.Status.code = "Unknown error";
+                error.Status.message = ex.Message;
+                return error;
             }
+
         }
 
     }

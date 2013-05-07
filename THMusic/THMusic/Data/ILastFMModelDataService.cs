@@ -1,28 +1,16 @@
 ﻿//***************************************************************************************************
-//Name of File:     ILastFMModelHelper.cs
-//Description:      The ILastFMModelHelper provides the interface to the LastFMService.
+//Name of File:     ILastFMModelDataService.cs
+//Description:      The ILastFMModelDataService provides the interface to the LastFMModelDataService.
 //Author:           Tim Harrison
 //Date of Creation: Apr/May 2013.
 //
 //I confirm that the code contained in this file (other than that provided or authorised) is all 
 //my own work and has not been submitted elsewhere in fulfilment of this or any other award.
 //***************************************************************************************************
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-
-using Windows.ApplicationModel.Resources;
-using Windows.Globalization.DateTimeFormatting;
-
 using THMusic.DataModel;
-using Core.Interfaces;
-using Core.Model;
-using Core.Factories;
-using Core.Services;
 
-namespace THMusic.Helpers
+namespace THMusic.Data
 {
     /// <summary>
     /// This <c>LastFMModelHelper</c> class is responsible for managing all
@@ -32,14 +20,14 @@ namespace THMusic.Helpers
     /// The LastFMViewModel is part of the MVVM pattern implemented within
     /// the UI, and supported by the MVMLight framework.
     /// </summary>
-    public interface ILastFMModelHelper
+    public interface ILastFMModelDataService
     {
         /// <summary>
         /// Helper method to load the GroupModel that supports the MainViewModel
         /// with the corresponding group category.
         /// </summary>
         /// <returns></returns>
-        Task<AlbumModel> CallLastFMAlbumInfoAsync(string ArtistName, string AlbumName);
+        Task<AlbumModel> GetLastFMAlbumInfoAsync(string ArtistName, string AlbumName);
 
         /// <summary>
         /// Helper method to create the LastFMalbum as an album in the domain.

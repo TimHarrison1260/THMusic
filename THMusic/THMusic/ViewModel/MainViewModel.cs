@@ -21,6 +21,7 @@ using Core.Interfaces;
 using Core.Model;
 
 using THMusic.DataModel;
+using THMusic.Data;
 using THMusic.Navigation;
 
 
@@ -40,15 +41,128 @@ namespace THMusic.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        //private ILastFMService _lastFMService;
-        private IArtistRepository _artistRepository;
+        private IGroupModelDataService _dataService;
         private INavigationService _navigator;
 
 
+        /// <summary>
+        /// ctor: Initialised a new instance of the MainViewModel class
+        /// </summary>
+        /// <param name="ArtistRepository">A reference to the ArtistRepository, injected at runtime</param>
+        /// <param name="LastFMService">A reference to the LastFMService, injected at runtime.</param>
+        /// <remarks>
+        /// This follows the example supplied by the MVVMLight framework with modifications to use
+        /// constructor injection via the SimpleIoC container.
+        /// </remarks>
+        public MainViewModel(Data.IGroupModelDataService GroupModelDataService, INavigationService NavigationService)
+        {
+            if (GroupModelDataService == null)
+                throw new ArgumentNullException("GroupModelDataService", "No valid DataService supplied");
+            _dataService = GroupModelDataService;
+            if (NavigationService == null)
+                throw new ArgumentNullException("NavigationService", "No valid Navigation Service supplied");
+            _navigator = NavigationService;
+
+            //  Set up the data
+            if (IsInDesignMode)
+            {
+                //  TODO: refactor the MainModelHelper to be an injected reference
+                //          This will allow a design time version to be injected that doesn't
+                //          use Async calls and have a static version in the UI.Data layer
+                //          alongside the DesignTimeRepositories.
+
+                // Code runs in Blend --> create design time data.
+                LoadGroupsAsync();
+            }
+            else
+            {
+                // Code runs "for real"
+                //  No runtime data required here, the model is loaded which the page
+                //  is navigated to as it accepts a GroupType, and type to determine
+                //  the correct grouping to load.  The options are Artists, Genres or 
+                //  Playlists.
+                //  AVoiding placing any Async calls within the constructor as this
+                //  can cause deadlocks on the UI thread  and various other problems.
+            }
+
+            //  Bind the handlers to the commands
+            ImportMP3Command = new RelayCommand(ImportMP3Handler);
+            ImportLastFMCommand = new RelayCommand(ImportLastFMHandler);
+            RefreshGroupingCommand = new RelayCommand(RefreshGroupingHandler);
+        }
+
+
+
+
         //  ************************  Properties for binding   **************************
         //  ************************  Properties for binding   **************************
         //  ************************  Properties for binding   **************************
 
+        //  Select the grouping required to display
+        public bool IsGroupArtist
+        {
+            get { return (_grouping == GroupTypeEnum.Artist) ? true: false; }
+            set
+            {
+                SetGrouping(GroupTypeEnum.Artist);
+            }
+        }
+
+        public bool IsGroupGenre
+        {
+            get { return (_grouping == GroupTypeEnum.Genre) ? true: false; }
+            set
+            {
+                SetGrouping(GroupTypeEnum.Genre);
+            }
+        }
+
+        public bool IsGroupPlaylist
+        {
+            get { return (_grouping == GroupTypeEnum.Playlist) ? true: false; }
+            set
+            {
+                SetGrouping(GroupTypeEnum.Playlist);
+            }
+        }
+
+        private GroupTypeEnum _grouping = GroupTypeEnum.Artist;  //    Default is grouped by Artist
+        private void SetGrouping(GroupTypeEnum selectedGrouping)
+        {
+            //  Set the _grouping to that selected
+            _grouping = selectedGrouping;
+            //  Notify that all three properties have changed
+            RaisePropertyChanged(() => IsGroupArtist);
+            RaisePropertyChanged(() => IsGroupGenre);
+            RaisePropertyChanged(() => IsGroupPlaylist);
+            //  Now activate the Refresh button 
+            _isRefreshVisible = true;
+            RaisePropertyChanged(() => IsRefreshVisible);
+        }
+
+        private bool _isRefreshVisible = false;
+        public bool IsRefreshVisible
+        {
+            get { return _isRefreshVisible; }
+            set
+            {
+                _isRefreshVisible = value;
+                RaisePropertyChanged(() => IsRefreshVisible);
+            }
+        }
+
+
+        public string AppName
+        {
+            get { return GetLocalisedAppName(); }
+        }
+
+        private string GetLocalisedAppName()
+        {
+            return Helpers.LocalisationHelper.LocaliseAppName(_grouping);
+        }
+
+        
         private List<GroupModel> _groups;
         public List<GroupModel> Groups
         {
@@ -69,7 +183,7 @@ namespace THMusic.ViewModel
             get { return _selectedGroup; }
             set
             {
-                if (_selectedGroup != value)
+                if (value != null && _selectedGroup != value)
                 {
                     _selectedGroup = value;
                     RaisePropertyChanged(() => SelectedGroup);
@@ -91,7 +205,7 @@ namespace THMusic.ViewModel
         /// </remarks>
         public async Task RefreshData()
         {
-            await LoadGroups();
+            await LoadGroupsAsync();
         }
 
 
@@ -102,7 +216,7 @@ namespace THMusic.ViewModel
 
         private void ImportLastFMHandler()
         {
-            //  Navigate away to the Impoft page for LastFM information.
+            //  Navigate away to the Import page for LastFM information.
             _navigator.Navigate(typeof(ImportLastFM));
         }
 
@@ -113,52 +227,22 @@ namespace THMusic.ViewModel
             //  Navigate away to the Import page for MP3 files
 
         }
-        
 
-        /// <summary>
-        /// ctor: Initialised a new instance of the MainViewModel class
-        /// </summary>
-        /// <param name="ArtistRepository">A reference to the ArtistRepository, injected at runtime</param>
-        /// <param name="LastFMService">A reference to the LastFMService, injected at runtime.</param>
-        /// <remarks>
-        /// This follows the example supplied by the MVVMLight framework with modifications to use
-        /// constructor injection via the SimpleIoC container.
-        /// </remarks>
-        public MainViewModel(IArtistRepository ArtistRepository, INavigationService NavigationService)   //, ILastFMService LastFMService)
+        public RelayCommand RefreshGroupingCommand { get; set; }
+
+        private async void RefreshGroupingHandler()
         {
-            if (ArtistRepository == null)
-                throw new ArgumentNullException("ArtistRepository", "No valid Repository supplied");
-            _artistRepository = ArtistRepository;
-            if (NavigationService == null)
-                throw new ArgumentNullException("NavigationService", "No valid Navigation Service supplied");
-            _navigator = NavigationService;
+            //  Hide the Refresh button
+            _isRefreshVisible = false;
+            RaisePropertyChanged(() => IsRefreshVisible);
 
-            //if (LastFMService == null)
-            //    throw new ArgumentNullException("LastFMService", "No valid service supplied");
-            //_lastFMService = LastFMService;
+            //  Call into load data with the correct parameters
+            await LoadGroupsAsync();
 
-            //  Set up the data
-            if (IsInDesignMode)
-            {
-                //  TODO: refactor the MainModelHelper to be an injected reference
-                //          This will allow a design time version to be injected that doesn't
-                //          use Async calls and have a static version in the UI.Data layer
-                //          alongside the DesignTimeRepositories.
-
-                // Code runs in Blend --> create design time data.
-                LoadGroups();
-//                this.Groups = Helpers.GroupModelHelper.Load(GroupTypeEnum.Artist, _artistRepository);
-            }
-            else
-            {
-                // Code runs "for real"
-                LoadGroups();
-            }
-
-
-            ImportMP3Command = new RelayCommand(ImportMP3Handler);
-            ImportLastFMCommand = new RelayCommand(ImportLastFMHandler);
+            RaisePropertyChanged(() => AppName);
         }
+
+
 
         /// <summary>
         /// Private method that initiates loading the data context on startup.
@@ -169,13 +253,9 @@ namespace THMusic.ViewModel
         /// this from the mainViewModel constructor would require it to be decorated as 
         /// 'async' which is not possible.
         /// </remarks>
-        private async Task LoadGroups()
+        private async Task LoadGroupsAsync()
         {
-            this.Groups = await Helpers.GroupModelHelper.LoadAsync(GroupTypeEnum.Artist, _artistRepository);
-            if (this.Groups.Count > 0)
-                this.SelectedGroup = this.Groups[0];
-            else
-                this.SelectedGroup = new GroupModel();
+            this.Groups = await _dataService.LoadAsync(_grouping);
         }
 
     }

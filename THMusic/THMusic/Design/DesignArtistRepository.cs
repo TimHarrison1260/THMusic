@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace THMusic.Data
+namespace THMusic.Design
 {
     public class DesignArtistRepository : Core.Interfaces.IArtistRepository
     {
@@ -46,12 +46,12 @@ namespace THMusic.Data
         }
 
 
-        public async Task<IEnumerable<Core.Model.Artist>> GetAllArtists()
+        public async Task<IEnumerable<Core.Model.Artist>> GetAll()
         {
             return _artists;
         }
 
-        public async Task<string> GetArtistAlbumImage(int Id)
+        public async Task<string> GetFirstAlbumImage(int Id)
         {
             if (Id == 1)
                 return @"Assets\DarkSideOfTheMoonLarge.png";
@@ -59,7 +59,7 @@ namespace THMusic.Data
                 return @"Assets\DamnationLarge.png";
         }
 
-        public async Task<int> GetArtistAlbums(int Id)
+        public async Task<int> GetAlbums(int Id)
         {
             if (Id == 1)
                 return 2;
@@ -67,7 +67,7 @@ namespace THMusic.Data
                 return 1;
         }
 
-        public async Task<int> GetArtistTracks(int Id)
+        public async Task<int> GetTracks(int Id)
         {
             if (Id == 1)
                 return 9;
@@ -75,7 +75,7 @@ namespace THMusic.Data
                 return 8;
         }
 
-        public async Task<TimeSpan> GetArtistDuration(int Id)
+        public async Task<TimeSpan> GetDuration(int Id)
         {
             if (Id == 1)
                 return new TimeSpan(0, 43, 15);
@@ -83,12 +83,12 @@ namespace THMusic.Data
                 return new TimeSpan(0, 42, 51);
         }
 
-        public async Task<Core.Model.Artist> GetArtistById(int Id)
+        public async Task<Core.Model.Artist> GetById(int Id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Core.Model.Artist> GetArtistByName(string Name)
+        public async Task<Core.Model.Artist> GetByName(string Name)
         {
             throw new NotImplementedException();
         }

@@ -72,7 +72,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{Binding AppName, Mode=TwoWay}"  IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
@@ -118,6 +118,13 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
+    
+    <!-- Top appbar for selection of album grouping-->
+    <Page.TopAppBar>
+        <AppBar x:Name="MainPageTopAppBar" Margin="0,0,0,0">
+            <uc:GroupAppBarTop />
+        </AppBar>
+    </Page.TopAppBar>
     
     <!-- the bottom application bar -->
     <Page.BottomAppBar>

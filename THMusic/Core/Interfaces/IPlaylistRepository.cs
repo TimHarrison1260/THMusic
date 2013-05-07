@@ -1,6 +1,6 @@
 ﻿//***************************************************************************************************
-//Name of File:     IArtistRepository.cs
-//Description:      An interface describing the ArtistRepository.
+//Name of File:     IPlaylistRepository.cs
+//Description:      An interface describing the PlaylistRepository.
 //                  It inherits from the base interface IGroupRepository.  This gives all classes
 //                  that participate in the "Groupin" of album, the same functionality so that
 //                  the repositories can be cast and interchanged, due to inheritance
@@ -18,7 +18,7 @@ using Core.Model;
 
 namespace Core.Interfaces
 {
-    public interface IArtistRepository : IGroupRepository<Artist>
+    public interface IPlaylistRepository : IGroupRepository<PlayList>
     {
     }
 }

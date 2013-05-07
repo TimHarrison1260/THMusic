@@ -19,6 +19,27 @@ namespace Core.Services
     /// </summary>
     public class LastFMAlbumInfo
     {
+        /// <summary>
+        /// This <c>LastFMAlbumInfo</c> class describes the return
+        /// from the LastFM.Album.GetInfo method call.
+        /// </summary>
+        public LastFMAlbumInfo()
+        {
+            this.name = string.Empty;
+            this.artist = new LastFMArtist();
+            this.id = string.Empty;
+            this.mbid = string.Empty;
+            this.url = string.Empty;
+            this.releasedDate = string.Empty;
+            this.images = new List<LastFMArtwork>();
+            this.listeners = string.Empty;
+            this.playcount = string.Empty;
+            this.tracks = new List<LastFMTrack>();
+            this.tags = new List<LastFMTag>();
+            this.wiki = new LastFMWiki();
+            this.Status = new LastFMError();
+        }
+
         //  Album information retrieved from LastFM
         public string name { get; set; }
         public LastFMArtist artist { get; set; }
@@ -32,11 +53,24 @@ namespace Core.Services
         public ICollection<LastFMTrack> tracks { get; set; }
         public ICollection<LastFMTag> tags { get; set; }
         public LastFMWiki wiki { get; set; }
+        public LastFMError Status { get; set; }
     }
 
 
     public class LastFMTrack
     {
+        public LastFMTrack()
+        {
+            this.rank = string.Empty;
+            this.name = string.Empty;
+            this.duration = string.Empty;
+            this.mbid = string.Empty;
+            this.url = string.Empty;
+            this.streamable = string.Empty;
+            this.streamFullTrack = string.Empty;
+            this.artist = new LastFMArtist();
+        }
+
         public string rank { get; set; }
         public string name { get; set; }
         public string duration { get; set; }
@@ -50,6 +84,13 @@ namespace Core.Services
 
     public class LastFMArtist
     {
+        public LastFMArtist()
+        {
+            this.name = string.Empty;
+            this.url = string.Empty;
+            this.mbid = string.Empty;
+        }
+
         public string name { get; set; }
         public string url { get; set; }
         public string mbid { get; set; }
@@ -57,12 +98,24 @@ namespace Core.Services
 
     public class LastFMArtwork
     {
+        public LastFMArtwork()
+        {
+            this.size = string.Empty;
+            this.imageUrl = string.Empty;
+        }
+
         public string size { get; set; }
         public string imageUrl { get; set; }
     }
 
     public class LastFMTag
     {
+        public LastFMTag()
+        {
+            this.name = string.Empty;
+            this.url = string.Empty;
+        }
+
         public string name { get; set; }
         public string url { get; set; }
     }
@@ -70,6 +123,13 @@ namespace Core.Services
 
     public class LastFMWiki
     {
+        public LastFMWiki()
+        {
+            this.summary = string.Empty;
+            this.content = string.Empty;
+            this.published = string.Empty;
+        }
+
         public string published { get; set; }
         public string summary {get; set;}
         public string content { get; set; }
@@ -79,6 +139,12 @@ namespace Core.Services
 
     public class LastFMError
     {
+        public LastFMError()
+        {
+            this.code = string.Empty;
+            this.message = string.Empty;
+        }
+
         public string code { get; set; }
         public string message { get; set; }
     }

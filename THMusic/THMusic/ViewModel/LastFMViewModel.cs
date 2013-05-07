@@ -20,7 +20,7 @@ using Core.Interfaces;
 using Core.Model;
 
 using THMusic.DataModel;
-using THMusic.Helpers;
+using THMusic.Data;
 using THMusic.Navigation;
 
 namespace THMusic.ViewModel
@@ -57,7 +57,7 @@ namespace THMusic.ViewModel
     public class LastFMViewModel : ViewModelBase
     {
         private readonly INavigationService _navigator; //  Navigation interface
-        private readonly ILastFMModelHelper _helper;    //  The helper classed that consumes the service
+        private readonly ILastFMModelDataService _dataService;    //  The model statservice classed that consumes the service
 
         /// <summary>
         /// ctor: Initialised a new instance of the AlbumViewModel class
@@ -68,11 +68,11 @@ namespace THMusic.ViewModel
         /// This follows the example supplied by the MVVMLight framework with modifications to use
         /// constructor injection via the SimpleIoC container.
         /// </remarks>
-        public LastFMViewModel(ILastFMModelHelper LastFMModelHelper, INavigationService NavigationService)
+        public LastFMViewModel(ILastFMModelDataService LastFMModelDataService, INavigationService NavigationService)
         {
-            if (LastFMModelHelper == null)
-                throw new ArgumentNullException("LastFMModelHelper", "No valid LastFM Helper supplied");
-            _helper = LastFMModelHelper;
+            if (LastFMModelDataService == null)
+                throw new ArgumentNullException("LastFMModelDataservice", "No valid LastFM DataService supplied");
+            _dataService = LastFMModelDataService;
             if (NavigationService == null)
                 throw new ArgumentNullException("NavigationService", "No valid Navigation Service supplied");
             _navigator = NavigationService;
@@ -121,7 +121,7 @@ namespace THMusic.ViewModel
         {
             if (this.LastFMAlbum != null)
             {
-                string success = await _helper.ImportAlbumAsync(this.LastFMAlbum);
+                string success = await _dataService.ImportAlbumAsync(this.LastFMAlbum);
                 //  now navigate back to the front page
                 _navigator.Navigate(typeof(ItemsPage), success);
             }
@@ -205,7 +205,7 @@ namespace THMusic.ViewModel
         private async Task GetLastFMAlbumAsync(string album, string artist)
         {
             //  Load the album
-            this.LastFMAlbum = await _helper.CallLastFMAlbumInfoAsync(artist, album);
+            this.LastFMAlbum = await _dataService.GetLastFMAlbumInfoAsync(artist, album);
         }
 
     }

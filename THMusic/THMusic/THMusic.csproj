@@ -109,22 +109,30 @@
     <Compile Include="CustomControls\AppBarBottom.xaml.cs">
       <DependentUpon>AppBarBottom.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\GroupAppBarTop.xaml.cs">
+      <DependentUpon>GroupAppBarTop.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataModel\AlbumModel.cs" />
+    <Compile Include="DataModel\GroupTypeEnum.cs" />
     <Compile Include="DataModel\WikiModel.cs" />
     <Compile Include="DataModel\TrackModel.cs" />
     <Compile Include="DataModel\GenreModel.cs" />
     <Compile Include="DataModel\GroupModel.cs" />
     <Compile Include="DataModel\ImageLoader.cs" />
-    <Compile Include="Data\DesignArtistRepository.cs" />
+    <Compile Include="Data\AlbumModelDataService.cs" />
+    <Compile Include="Design\DesignArtistRepository.cs" />
+    <Compile Include="Data\GroupModelDataService.cs" />
     <Compile Include="Data\Helpers\FileIOHelper.cs" />
     <Compile Include="Data\Helpers\MusicFileHelper.cs" />
     <Compile Include="Data\Helpers\NamespaceDoc.cs" />
+    <Compile Include="Data\IAlbumModelDataService.cs" />
+    <Compile Include="Data\IGroupModelDataService.cs" />
     <Compile Include="Data\IMusicInfo.cs" />
     <Compile Include="Data\MusicInfo.cs" />
-    <Compile Include="Helpers\AlbumModelHelper.cs" />
-    <Compile Include="Helpers\ILastFMModelHelper.cs" />
-    <Compile Include="Helpers\LastFMModelHelper.cs" />
-    <Compile Include="Helpers\GroupModelHelper.cs" />
+    <Compile Include="DataModel\NamespaceDoc.cs" />
+    <Compile Include="Data\ILastFMModelDataService.cs" />
+    <Compile Include="Data\LastFMModelDataservice.cs" />
+    <Compile Include="Design\DesignGroupModelDataService.cs" />
     <Compile Include="Helpers\LocalisationHelper.cs" />
     <Compile Include="ImportLastFM.xaml.cs">
       <DependentUpon>ImportLastFM.xaml</DependentUpon>
@@ -192,6 +200,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomControls\AppBarBottom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\GroupAppBarTop.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

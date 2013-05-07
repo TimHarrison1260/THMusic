@@ -108,8 +108,11 @@
     <Compile Include="Factories\PlaylistFactory.cs" />
     <Compile Include="Factories\TrackFactory.cs" />
     <Compile Include="Factories\WikiFactory.cs" />
+    <Compile Include="Interfaces\IPlaylistRepository.cs" />
+    <Compile Include="Interfaces\IGenreRepository.cs" />
     <Compile Include="Interfaces\IAlbumRepository.cs" />
     <Compile Include="Interfaces\IArtistRepository.cs" />
+    <Compile Include="Interfaces\IGroupRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Interfaces\IPersistenceRepository.cs" />
     <Compile Include="Interfaces\NamespaceDoc.cs" />
@@ -124,6 +127,7 @@
     <Compile Include="Model\ConcreteClasses\ConcreteWiki.cs" />
     <Compile Include="Model\ConcreteClasses\NamespaceDoc.cs" />
     <Compile Include="Model\Genre.cs" />
+    <Compile Include="Model\Group.cs" />
     <Compile Include="Model\Image.cs" />
     <Compile Include="Model\ImageSizeEnum.cs" />
     <Compile Include="Model\NamespaceDoc.cs" />

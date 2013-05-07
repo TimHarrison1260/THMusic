@@ -23,21 +23,25 @@ namespace Core.Model
     /// </summary>
     /// <remarks>
     /// <para>
+    /// It inherits from the base class <see cref="Core.Model.Group"/> so that
+    /// there is common properties for all classes that are used to group Albums
+    /// </para>
+    /// <para>
     /// It is decorated with the XmlInclude() attribute so that the the concrete implementation
     /// is persisted.
     /// </para>
     /// </remarks>
     [XmlInclude(typeof(ConcretePlaylist))]
-    public abstract class PlayList
+    public abstract class PlayList : Group
     {
-        /// <summary>
-        /// Gets or sets the Unique Id of the Playlist
-        /// </summary>
-        public int Id { get; set; }
-        /// <summary>
-        /// Gets or sets the Name of the playlist
-        /// </summary>
-        public string Name { get; set; }
+        ///// <summary>
+        ///// Gets or sets the Unique Id of the Playlist
+        ///// </summary>
+        //public int Id { get; set; }
+        ///// <summary>
+        ///// Gets or sets the Name of the playlist
+        ///// </summary>
+        //public string Name { get; set; }
         /// <summary>
         /// Gets or sets the collection of Tracks in the PlayList
         /// </summary>

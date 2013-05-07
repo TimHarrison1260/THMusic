@@ -1,6 +1,6 @@
 ﻿//***************************************************************************************************
-//Name of File:     AlbumModelHelper.cs
-//Description:      The AlbumModelHelper provides loading and mapping functionality for the AlbumsViewModel.
+//Name of File:     AlbumModelDataSource.cs
+//Description:      The AlbumModelDataSource provides loading and mapping functionality for the AlbumsViewModel.
 //Author:           Tim Harrison
 //Date of Creation: Apr/May 2013.
 //
@@ -20,7 +20,7 @@ using THMusic.DataModel;
 using Core.Interfaces;
 using Core.Model;
 
-namespace THMusic.Helpers
+namespace THMusic.Data
 {
     /// <summary>
     /// This <c>AlbumModelHelper</c> class is responsible for managing all
@@ -29,13 +29,40 @@ namespace THMusic.Helpers
     /// The AlbumsViewModel is part of the MVVM pattern implemented within
     /// the UI, and supported by the MVMLight framework.
     /// </summary>
-    public static class AlbumModelHelper
+    public class AlbumModelDataService : IAlbumModelDataService
     {
+        //  Injected instances of the various repositories (Domain Model)
+        private readonly IAlbumRepository _albumRepository;
+        private readonly IArtistRepository _artistRepository;
+        private readonly IGenreRepository _genreRepository;
+        private readonly IPlaylistRepository _playlistRepository;
+
          /// <summary>
         /// Provides access to the resouce files, Localisation, used
         /// when describing the Group Totals.
         /// </summary>
         private static ResourceLoader _loader = new ResourceLoader();
+
+
+        /// <summary>
+        /// ctor: Initialise the AlbumModelDataService
+        /// </summary>
+        /// <param name="AlbumRepository"></param>
+        public AlbumModelDataService(IAlbumRepository AlbumRepository, IArtistRepository ArtistRepository, IGenreRepository GenreRepository, IPlaylistRepository PlaylistRepository)
+        {
+            if (AlbumRepository == null)
+                throw new ArgumentNullException("AlbumRepository", "No valid Repository supplied");
+            _albumRepository = AlbumRepository;
+            if (ArtistRepository == null)
+                throw new ArgumentNullException("ArtistRepository", "No valid Repository supplied");
+            _artistRepository = ArtistRepository;
+            if (GenreRepository == null)
+                throw new ArgumentNullException("GenreRepository", "No valid Repository supplied");
+            _genreRepository = GenreRepository;
+            if (PlaylistRepository == null)
+                throw new ArgumentNullException("PlaylistRepository", "No valid Repository supplied");
+            _playlistRepository = PlaylistRepository;
+        }
 
 
         /// <summary>
@@ -46,22 +73,22 @@ namespace THMusic.Helpers
         /// <param name="Type">The Type of the Group</param>
         /// <param name="ArtistRepository">Instance of the ArtistRepository</param>
         /// <returns></returns>
-        public static async Task<string> LoadGroupNameAsync(int Id, GroupTypeEnum Type, IArtistRepository ArtistRepository)
+        public async Task<string> LoadGroupNameAsync(int Id, GroupTypeEnum Type)
         {
             string name = string.Empty;
             switch (Type)
             {
                 case GroupTypeEnum.Artist:
-                    var artist = await ArtistRepository.GetArtistById(Id);
+                    var artist = await _artistRepository.GetById(Id);
                     name = artist.Name;
                     break;
                 case GroupTypeEnum.Genre:
-                    //var Genre = await ArtistRepository.GetArtistById(Id);
-                    //name = Genre.Name;
+                    var Genre = await _genreRepository.GetById(Id);
+                    name = Genre.Name;
                     break;
                 case GroupTypeEnum.Playlist:
-                    //var Playlist = await ArtistRepository.GetArtistById(Id);
-                    //name = Playlist.Name;
+                    var Playlist = await _playlistRepository.GetById(Id);
+                    name = Playlist.Name;
                     break;
             }
             return name;
@@ -73,14 +100,40 @@ namespace THMusic.Helpers
         /// with the corresponding group category.
         /// </summary>
         /// <returns></returns>
-        public static async Task<List<AlbumModel>> LoadAlbumsAsync(int Id, GroupTypeEnum Type, IAlbumRepository AlbumRepository)
+        public async Task<List<AlbumModel>> LoadAlbumsAsync(int Id, GroupTypeEnum Type)
         {
             //  TODO: convert this to accept the Group Type parameter.  Only use Artist for now.
             var albumsViewModel = new List<AlbumModel>();
 
             //  Call the repository 
             //  Check, this should include the albums, there is no Lazy loading strategy for this.
-            var albums = await AlbumRepository.GetAlbumsForArtist(Id);
+            IEnumerable<Album> albums = new List<Album>();
+            switch (Type)
+            {
+                case GroupTypeEnum.Artist:
+                    albums = await _albumRepository.GetAlbumsForArtist(Id);
+                    break;
+                case GroupTypeEnum.Genre:
+                    albums = await _albumRepository.GetAlbumsForGenre(Id);
+                    break;
+                case GroupTypeEnum.Playlist:
+                    albums = await _albumRepository.GetAlbumsForPlaylist(Id);
+                    break;
+            }
+            //  Map the albums to the albumsViewModel
+            albumsViewModel = MapAlbumsToAlbumModels(albums);
+            return albumsViewModel;
+        }
+
+        /// <summary>
+        /// Maps the Album returned from the Domain Model, to the AlbumModel of the UI
+        /// </summary>
+        /// <param name="albums">Domain Albums collection</param>
+        /// <returns>AlbumModel collection</returns>
+        private List<AlbumModel> MapAlbumsToAlbumModels(IEnumerable<Album> albums)
+        {
+            //  The viewmodel collection
+            var albumsViewModel = new List<AlbumModel>();
 
             //  Map the albums to the AlbumViewModel
             foreach (var a in albums)

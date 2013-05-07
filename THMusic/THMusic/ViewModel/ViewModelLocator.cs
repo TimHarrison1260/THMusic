@@ -50,7 +50,11 @@ namespace THMusic.ViewModel
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 // Create design time view services and models
-                SimpleIoc.Default.Register<Core.Interfaces.IArtistRepository, DesignArtistRepository>();
+                SimpleIoc.Default.Register<Core.Interfaces.IArtistRepository, Design.DesignArtistRepository>();
+
+                //SimpleIoc.Default.Register<Core.Interfaces.IGenreRepository, Design.DesignGenrerepository>();
+
+                SimpleIoc.Default.Register<Data.IGroupModelDataService, Design.DesignGroupModelDataService>();
                 //IoC.Configuration.ResisterDesignDataSource(SimpleIoc.Default);
             }
             else
@@ -61,15 +65,18 @@ namespace THMusic.ViewModel
                 // Create run time view services and models
                 //SimpleIoc.Default.Register<IDataService, DataService>();
                 IoC.Configuration.RegisterDataSource(SimpleIoc.Default);
-            }
 
-            //  Register the View Models and other UI Services
+                //  Group model data service for main page (ItemPage)
+                SimpleIoc.Default.Register<IGroupModelDataService, GroupModelDataService>();
+                SimpleIoc.Default.Register<IAlbumModelDataService, AlbumModelDataService>();
+                SimpleIoc.Default.Register<ILastFMModelDataService, LastFMModelDataService>();
+
+            }
 
             //  Navigation service
             SimpleIoc.Default.Register<Navigation.INavigationService, Navigation.NavigationService>();
-            //  LastFM Helper.
-            SimpleIoc.Default.Register<Helpers.ILastFMModelHelper, Helpers.LastFMModelHelper>();
 
+            //  Register the View Models and other UI Services
             //  MainViewModel, used on the GroupPage: (ItemsPage.xaml)
             SimpleIoc.Default.Register<MainViewModel>();        // registers a concrete implementation
             //  AlbumsViewModel, used on the Albums page: (SplitPage.xaml)

@@ -18,6 +18,7 @@ using Core.Interfaces;
 using Core.Model;
 
 using THMusic.DataModel;
+using THMusic.Data;
 
 
 namespace THMusic.ViewModel
@@ -47,8 +48,7 @@ namespace THMusic.ViewModel
     /// </remarks>
     public class AlbumsViewModel : ViewModelBase
     {
-        private readonly IAlbumRepository _albumRepository;
-        private readonly IArtistRepository _artistRepository;
+        private readonly IAlbumModelDataService _dataService;
 
         /// <summary>
         /// ctor: Initialised a new instance of the AlbumViewModel class
@@ -59,24 +59,15 @@ namespace THMusic.ViewModel
         /// This follows the example supplied by the MVVMLight framework with modifications to use
         /// constructor injection via the SimpleIoC container.
         /// </remarks>
-        public AlbumsViewModel(IAlbumRepository AlbumRepository, IArtistRepository ArtistRepository)
+        public AlbumsViewModel(IAlbumModelDataService AlbumModelDataService)
         {
-            if (AlbumRepository == null)
-                throw new ArgumentNullException("AlbumRepository", "No valid Repository supplied");
-            _albumRepository = AlbumRepository;
-            if (ArtistRepository == null)
-                throw new ArgumentNullException("ArtistRepository", "No valid Repository supplied");
-            _artistRepository = ArtistRepository;
-
+            if (AlbumModelDataService == null)
+                throw new ArgumentNullException("AlbumModeldataService", "No valid data service supplied");
+            _dataService = AlbumModelDataService;
 
             //  Set up the data
             if (IsInDesignMode)
             {
-                //  TODO: refactor the AlbumModelHelper to be an injected reference
-                //          This will allow a design time version to be injected that doesn't
-                //          use Async calls and have a static version in the UI.Data layer
-                //          alongside the DesignTimeRepositories.
-
                 // Code runs in Blend --> create design time data.
                 int Id = 1;
                 LoadViewModelAsync(Id, GroupTypeEnum.Artist);
@@ -180,12 +171,13 @@ namespace THMusic.ViewModel
         private async void LoadViewModelAsync(int Id, GroupTypeEnum groupType)
         {
             //  Load the albums
-            this.Albums = await Helpers.AlbumModelHelper.LoadAlbumsAsync(Id, groupType, _albumRepository);
+            this.Albums = await _dataService.LoadAlbumsAsync(Id, groupType);
+            //            this.Albums = await Helpers.AlbumModelHelper.LoadAlbumsAsync(Id, groupType, _albumRepository);
             this.CurrentAlbum = Albums[0];
             //  Load the Group Name
-            this.GroupName = await Helpers.AlbumModelHelper.LoadGroupNameAsync(Id, groupType, _artistRepository);
+            this.GroupName = await _dataService.LoadGroupNameAsync(Id, groupType);
+            //            this.GroupName = await Helpers.AlbumModelHelper.LoadGroupNameAsync(Id, groupType, _artistRepository);
         }
-
     }
 
 }

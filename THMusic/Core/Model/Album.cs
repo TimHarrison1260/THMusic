@@ -28,7 +28,7 @@ namespace Core.Model
     /// </para>
     /// </remarks>
     [XmlInclude(typeof(ConcreteClasses.ConcreteAlbum))]
-    public abstract class Album
+    public abstract class Album 
     {
         /// <summary>
         /// Gets or sets the unique Id of the Album
@@ -74,5 +74,43 @@ namespace Core.Model
         /// Gets or sets a collection of Genres categorizing the Album content
         /// </summary>
         public List<Genre> Genres { get; set; }
-    }
+
+
+        /// <summary>
+        /// Makes a Shallow clone of this Album.
+        /// <para>
+        /// It creates a new instance, but copies the references only for the
+        /// child classes, all except the Tracks.  The tracks are included as
+        /// a new initilised List, with no actual tracks in it.
+        /// </para>
+        /// <para>
+        /// This is to allow for the tracks for the album that belong to a 
+        /// Playlist to be modified, without modifying the domain model instance
+        /// itself.  It is only the tracks that must be changed, so the other
+        /// child classes are safe to be a reference copy only.
+        /// </para>
+        /// </summary>
+        /// <returns></returns>
+        public Album Clone()
+        {
+            //  Shallow copy with no Tracks.
+            var clonedAlbum = new ConcreteClasses.ConcreteAlbum();
+            clonedAlbum.Id = this.Id;
+            clonedAlbum.Title = this.Title;
+            clonedAlbum.Released = this.Released;
+            clonedAlbum.Url = this.Url;
+            clonedAlbum.Mbid = this.Mbid;
+            clonedAlbum.Tracks = new List<Track>();
+            clonedAlbum.Images = new List<Image>();
+            clonedAlbum.Images = this.Images;
+            clonedAlbum.Artist = new ConcreteClasses.ConcreteArtist();
+            clonedAlbum.Artist = this.Artist;
+            clonedAlbum.Wiki = new ConcreteClasses.ConcreteWiki();
+            clonedAlbum.Wiki = this.Wiki;
+            clonedAlbum.Genres = new List<Genre>();
+            clonedAlbum.Genres = this.Genres;
+            return clonedAlbum;
+        }
+
+    }    
 }
