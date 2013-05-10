@@ -109,8 +109,11 @@
     <Compile Include="Design\DesignMusicCollection.cs" />
     <Compile Include="Data\InitialiseMusicCollection.cs" />
     <Compile Include="Helpers\DataFileHelper.cs" />
+    <Compile Include="Helpers\SerialiseHelper.cs" />
     <Compile Include="Helpers\FileIOHelper.cs" />
     <Compile Include="Helpers\MusicFileHelper.cs" />
+    <Compile Include="Services\LastFMHelper.cs" />
+    <Compile Include="Services\MusicFileMapper.cs" />
     <Compile Include="Services\MusicFileService.cs" />
     <Compile Include="Helpers\NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

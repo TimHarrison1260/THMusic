@@ -11,6 +11,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 using System.IO;
@@ -34,8 +35,38 @@ namespace Infrastructure.Data
     /// lifetime of this class ensuring that the same instance is always used.
     /// this is the Unit Of Work pattern.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Concurrency
+    /// </para>
+    /// <para>
+    /// This Music collection class is the only place in the application where Albums,
+    /// Tracks, Artists, Genres and Playlist are physically updated or added to the Music
+    /// Collection.  
+    /// 
+    /// The Artist, Genres and Playlists are updated within the 
+    /// <see cref="Infrastructure.Data.DataHelper"/> class.
+    /// Therefore we define monitoring lock for the Albums,
+    /// and Tracks collections for use in the sections where these
+    /// List(T) collections are updated.  This will ensure that only these
+    /// methods can perform the updates and any multiple instances of them
+    /// on different threads will have their access to these collections
+    /// serialised, ensuring the updates are thread-safe.
+    /// </para>
+    /// <para>
+    /// This is a course grained way of locking these collections, but is entirely
+    /// appropriate here as the applicationn, while it is multi-threaded, it is
+    /// only single user and the performance hit of such course grained locking
+    /// will not have a major affect on the performance.
+    /// </para>
+    /// </remarks>
     public class MusicCollection : IUnitOfWork
     {
+        /// <summary>
+        /// Locking object for updates.
+        /// </summary>
+        private static object _AlbumsLock = new object();
+
         /// <summary>
         /// Holds the instance of the file handle to the underlying datafile.
         /// </summary>
@@ -80,6 +111,26 @@ namespace Infrastructure.Data
         /// <para>
         /// The instances of the various factories are required by the 
         /// <c>InitialiseMusiccollection</c> methods.
+        /// </para>
+        /// <para>
+        /// Replace the List(T) holding the mucis collection with a Concurrent version to support mutli threading
+        /// 
+        ///     NB: This could be the ConcurrentBag or the ConcurrentDictiionary.  Whichever is used MUST meed the following
+        ///         Criteri:
+        ///         1.  Must support the Add method to add an item
+        ///         2.  Must support enumarations over the collection
+        ///         3.  Must support the use of Linq-To-Objects to retrieve information
+        ///         4.  Must support the ability to delete the item
+        ///         5.  Must support the ability to replace/update an item.  this can be Remove the item, update and 
+        ///             add back.
+        ///         This is needed because the collection have to be thread-safe and support the various locking
+        ///         options available to ensure safe update of items.  Even though this is a single user application
+        ///         the async model is used throughout the appliation to keep the UI responsive, but means that the
+        ///         possiblity exists that updates are concurrently performed from different threads.
+        ///         
+        ///     See other discussions as to why these options were dropped in favour of using a 
+        ///     monitoring lock on the Lst(T) objects themselves.
+        ///
         /// </para>
         /// </remarks>
         [PreferredConstructor]
@@ -126,27 +177,9 @@ namespace Infrastructure.Data
         }
 
 
-        //  TODO: Replace the List<T> holding the mucis collection with a Concurrent version to support mutli threading
         /// <summary>
         /// The collostion of Albums making up the Collection
         /// </summary>
-        /// <remarks>
-        /// Replace the List<T> holding the mucis collection with a Concurrent version to support mutli threading
-        /// 
-        ///     NB: This could be the ConcurrentBag or the ConcurrentDictiionary.  Whichever is used MUST meed the following
-        ///         Criteri:
-        ///         1.  Must support the Add method to add an item
-        ///         2.  Must support enumarations over the collection
-        ///         3.  Must support the use of Linq-To-Objects to retrieve information
-        ///         4.  Must support the ability to delete the item
-        ///         5.  Must support the ability to replace/update an item.  this can be Remove the item, update and 
-        ///             add back.
-        ///         This is needed because the collection have to be thread-safe and support the various locking
-        ///         options available to ensure safe update of items.  Even though this is a single user application
-        ///         the async model is used throughout the appliation to keep the UI responsive, but means that the
-        ///         possiblity exists that updates are concurrently performed from different threads.
-        ///
-        /// </remarks>
         public List<Album> Albums {get; set;}
 
         /// <summary>
@@ -176,27 +209,50 @@ namespace Infrastructure.Data
         /// </summary>
         /// <param name="newAlbum">The Album to be Created and added to the context</param>
         /// <returns>The instance of the album created</returns>
+        /// <remarks>
+        /// This method introduces a bottleneck to the asynchronous processing that
+        /// happens to get here.  All routines within this context are synchronous
+        /// in nature because there are no methods that are called from them, such
+        /// as List(T).Add methods that can be asynchronous.  
+        /// <para>
+        /// This lock, actually makes the locks in the DataHelper methods redundant,
+        /// Because this entire thread has access locked with this one.  However
+        /// There is no harm at all in leaving the other locks in place, should the
+        /// application be extended in the future and allowing the other methods
+        /// to be called from elsewhere.
+        /// </para>
+        /// <para>
+        /// These methods all produce warning errors, complaining that they 
+        /// "lacking await" keywords and will therefore execute synchronously.
+        /// These could be removed by calling await Task.Delay(0) which would
+        /// remove the warning message but provide no improvement to the 
+        /// efficiency of the routines.
+        /// </para>
+        /// </remarks>
         public async Task<Album> CreateAlbum(Album newAlbum)
         {
-            //  1.  Calculate the new AlbumId and update the album
-            newAlbum.Id = _helper.GenerateAlbumId(this);
+            lock (_AlbumsLock)
+            {
 
-            //  2.  Add the album ref to each track and add each to the Tracks collection
-            //      and update the tracks collection to ensure the navigation properties are updated.
-            var updatedTracks = _helper.AddTracksToContext(this, newAlbum.Tracks, newAlbum);
-            newAlbum.Tracks = updatedTracks;
+                //  1.  Calculate the new AlbumId and update the album
+                newAlbum.Id = _helper.GenerateAlbumId(this);
 
-            //  3   Add each genre to the Genres collection, ensure navigation properties are updated
-            var updatedGenres = _helper.AddGenresToContext(this, newAlbum.Genres, newAlbum);
-            newAlbum.Genres = updatedGenres;
+                //  2.  Add the album ref to each track and add each to the Tracks collection
+                //      and update the tracks collection to ensure the navigation properties are updated.
+                var updatedTracks = _helper.AddTracksToContext(this, newAlbum.Tracks, newAlbum);
+                newAlbum.Tracks = updatedTracks;
 
-            //  4   Add the Artist to the Artist collection, ensure navigation properties are updated.
-            var updatedArtist = _helper.AddArtistToContext(this, newAlbum.Artist, newAlbum);
-            newAlbum.Artist = updatedArtist;
+                //  3   Add each genre to the Genres collection, ensure navigation properties are updated
+                var updatedGenres = _helper.AddGenresToContext(this, newAlbum.Genres, newAlbum);
+                newAlbum.Genres = updatedGenres;
 
-            //  5.  Add the album to the Albums collection
-            this.Albums.Add(newAlbum);
+                //  4   Add the Artist to the Artist collection, ensure navigation properties are updated.
+                var updatedArtist = _helper.AddArtistToContext(this, newAlbum.Artist, newAlbum);
+                newAlbum.Artist = updatedArtist;
 
+                //  5.  Add the album to the Albums collection
+                this.Albums.Add(newAlbum);
+            }
             return newAlbum;
         }
 
@@ -205,6 +261,26 @@ namespace Infrastructure.Data
         /// entities and ensuring the navigation properties are correctly updated.
         /// </summary>
         /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
+        /// <remarks>
+        /// This method introduces a bottleneck to the asynchronous processing that
+        /// happens to get here.  All routines within this context are synchronous
+        /// in nature because there are no methods that are called from them, such
+        /// as List(T).Add methods that can be asynchronous.  
+        /// <para>
+        /// This lock, actually makes the locks in the DataHelper methods redundant,
+        /// Because this entire thread has access locked with this one.  However
+        /// There is no harm at all in leaving the other locks in place, should the
+        /// application be extended in the future and allowing the other methods
+        /// to be called from elsewhere.
+        /// </para>
+        /// <para>
+        /// These methods all produce warning errors, complaining that they 
+        /// "lacking await" keywords and will therefore execute synchronously.
+        /// These could be removed by calling await Task.Delay(0) which would
+        /// remove the warning message but provide no improvement to the 
+        /// efficiency of the routines.
+        /// </para>
+        /// </remarks>
         public async Task AddTrackToAlbum(Album UpdatedAlbum)
         {
             //  Get the existing album
@@ -220,53 +296,57 @@ namespace Infrastructure.Data
                 var albumIdx = this.Albums.IndexOf(existingAlbum);
 
                 var newTrack = UpdatedAlbum.Tracks.FirstOrDefault();
-                //  1.  Check if track already exists
-                var existingTrack = existingAlbum.Tracks.FirstOrDefault(t => t.Title == newTrack.Title);
-                if (existingTrack != null)
+
+                lock (_AlbumsLock)
                 {
-                    //      1a. Update all the track related fields
-                    //  Get the index of the track.
-                    var idx = existingAlbum.Tracks.IndexOf(existingTrack);
+                    //  1.  Check if track already exists
+                    var existingTrack = existingAlbum.Tracks.FirstOrDefault(t => t.Title == newTrack.Title);
+                    if (existingTrack != null)
+                    {
+                        //      1a. Update all the track related fields
+                        //  Get the index of the track.
+                        var idx = existingAlbum.Tracks.IndexOf(existingTrack);
 
-                    //  Add the new track to the tracks collection and update the Id and album reference
-                    //  The updated album contains only the one track, this needs a list
-                    var updatedTrack = _helper.AddTracksToContext(this, UpdatedAlbum.Tracks, existingAlbum);
-                    //  Now replace it in the Album tracks
-                    existingAlbum.Tracks[idx] = updatedTrack[0];
+                        //  Add the new track to the tracks collection and update the Id and album reference
+                        //  The updated album contains only the one track, this needs a list
+                        var updatedTrack = _helper.AddTracksToContext(this, UpdatedAlbum.Tracks, existingAlbum);
+                        //  Now replace it in the Album tracks
+                        existingAlbum.Tracks[idx] = updatedTrack[0];
+                    }
+                    else
+                    {
+                        //      1b. Add the track to the album
+                        //  Add the new track to the tracks collection and update the Id and album reference
+                        //  The updated album contains only the one track, this needs a list
+                        var updatedTrack = _helper.AddTracksToContext(this, UpdatedAlbum.Tracks, existingAlbum);
+                        //  now add it to the albums tracks
+                        existingAlbum.Tracks.Add(updatedTrack[0]);
+                    }
+
+                    //  Add any new Genres to the existing ones, duplicates will be removed when the Genres are
+                    //  updated by the AddGenresToContext routine.
+                    foreach (var g in UpdatedAlbum.Genres)
+                    {
+                        var existingGenre = existingAlbum.Genres
+                            .FirstOrDefault(gn => gn.Name == g.Name);
+                        if (existingAlbum == null)
+                            existingAlbum.Genres.Add(g);
+                    }
+                    //  3   Add each genre to the Genres collection, ensure navigation properties are updated
+                    var updatedGenres = _helper.AddGenresToContext(this, UpdatedAlbum.Genres, existingAlbum);
+                    existingAlbum.Genres = updatedGenres;
+
+                    //  Replace the Album reference in the Artist, as it has been updated to ensure the
+                    //  navigation properties are up to date.  It will find the artist, and the album too
+                    //  so the album reference will be replaced.
+                    var updatedArtist = _helper.AddArtistToContext(this, existingAlbum.Artist, existingAlbum);
+                    //  update the reference to the artist in the existingAlbum
+                    existingAlbum.Artist = updatedArtist;
+
+
+                    //Finally replace the Album in the Albums collection
+                    this.Albums[albumIdx] = existingAlbum;
                 }
-                else
-                {
-                    //      1b. Add the track to the album
-                    //  Add the new track to the tracks collection and update the Id and album reference
-                    //  The updated album contains only the one track, this needs a list
-                    var updatedTrack = _helper.AddTracksToContext(this, UpdatedAlbum.Tracks, existingAlbum);
-                    //  now add it to the albums tracks
-                    existingAlbum.Tracks.Add(updatedTrack[0]);
-                }
-
-                //  Add any new Genres to the existing ones, duplicates will be removed when the Genres are
-                //  updated by the AddGenresToContext routine.
-                foreach (var g in UpdatedAlbum.Genres)
-                {
-                    var existingGenre = existingAlbum.Genres
-                        .FirstOrDefault(gn => gn.Name == g.Name);
-                    if (existingAlbum == null)
-                        existingAlbum.Genres.Add(g);
-                }
-                //  3   Add each genre to the Genres collection, ensure navigation properties are updated
-                var updatedGenres = _helper.AddGenresToContext(this, UpdatedAlbum.Genres, existingAlbum);
-                existingAlbum.Genres = updatedGenres;
-
-                //  Replace the Album reference in the Artist, as it has been updated to ensure the
-                //  navigation properties are up to date.  It will find the artist, and the album too
-                //  so the album reference will be replaced.
-                var updatedArtist = _helper.AddArtistToContext(this, existingAlbum.Artist, existingAlbum);
-                //  update the reference to the artist in the existingAlbum
-                existingAlbum.Artist = updatedArtist;
-
-
-                //Finally replace the Album in the Albums collection
-                this.Albums[albumIdx] = existingAlbum;
             }
         }
 

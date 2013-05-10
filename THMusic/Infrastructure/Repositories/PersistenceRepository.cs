@@ -9,17 +9,13 @@
 //my own work and has not been submitted elsewhere in fulfilment of this or any other award.
 //***************************************************************************************************
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using System.IO;
-using Windows.Storage;
-using System.Xml.Serialization;
 
 using Core.Interfaces;
 using Core.Factories;
 using Core.Model;
 using Infrastructure.Data;
+using Infrastructure.Helpers;
 
 namespace Infrastructure.Repositories
 {
@@ -47,8 +43,6 @@ namespace Infrastructure.Repositories
         private readonly AbstractFactory<PlayList> _playlistFactory;
         private readonly AbstractFactory<Wiki> _wikiFactory;
 
-
-        //private StorageFile _dataFile;
 
         /// <summary>
         /// ctor: accepts the injected instance of the in-memory context
@@ -95,11 +89,12 @@ namespace Infrastructure.Repositories
         }
 
         /// <summary>
-        /// retrieves the data from the underlying file, in an asynchronous way
+        /// Retrieves the data from the underlying file, in an asynchronous way, 
+        /// rebuilds the navigation properties and loads the related collections.
+        /// If no data is actually loaded, then it initialises with some static data.
         /// </summary>
         public async Task LoadAsync()
         {
-            //  TODO: refactor this into a helper deserialise model class.
             //  Get the XML file if it exists.
             var fileHandle = await Helpers.DataFileHelper.GetDataFile();
 
@@ -109,8 +104,11 @@ namespace Infrastructure.Repositories
                 //  Store the handle to the search data file for use when the data is to be persisted
                 //  during the application close
                 _unitOfWork.PersistenceFile = fileHandle;
+                //  deserialise the Data
+                await SerialiseHelper.Deserialise(_unitOfWork, fileHandle);
+                //  Now Rebuild the navigation indexes and load related collections.
+                await _navigationProperyBuilder.Build(_unitOfWork);
 
-                await DeserialiseModel(_unitOfWork, fileHandle);
             }
             else
             {
@@ -119,87 +117,22 @@ namespace Infrastructure.Repositories
                 //  the data can be persisted in the XML file.
                 _unitOfWork.PersistenceFile = await Helpers.DataFileHelper.CreateDataFile();
             }
-
-
-            //  Now we need to check the datamodel to see if anything has been loaded, and call 
-            //  the initialise there's not data.
+            //  Now check the datamodel to see if anything has been loaded, and call 
+            //  the initialiseMusicCollection if there's no data.
             if (_unitOfWork.Albums.Count == 0)
-                Data.InitialiseMusicCollection.SeedData(_unitOfWork, _artistFactory, _albumFactory, _trackFactory, _imageFactory, _genreFactory, _playlistFactory, _wikiFactory);
-
+                InitialiseMusicCollection.SeedData(_unitOfWork, _artistFactory, _albumFactory, _trackFactory, _imageFactory, _genreFactory, _playlistFactory, _wikiFactory);
         }
-
-
-
-
-
 
         /// <summary>
         /// Persists the data in the underlying file, in an asynchronous way.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A Task so that it can be 'awaited'.</returns>
         public async Task SaveAsync()
         {
-
-            //  TODO: Refactor this into a serialise class within the Helpers
             //  get the handle to the XML data file.
             var dataFile = _unitOfWork.PersistenceFile;
-            await Serialisemodel(_unitOfWork, dataFile);
-
-            //await _unitOfWork.Save();
+            //  Serialise the data.
+            await SerialiseHelper.Serialise(_unitOfWork, dataFile);
         }
-
-
-        private async Task DeserialiseModel(IUnitOfWork UnitOfWork, StorageFile datafile)
-        {
-            //  Deserialise the data from the file.
-            using (StreamReader reader = new StreamReader(await datafile.OpenStreamForReadAsync()))
-            {
-                //  Check for an empty stream, exceptions will occur if it is.
-                if (!reader.EndOfStream)
-                {
-                    //  Set up the types for deserialising
-                    Type[] extraTypes = new Type[11];
-                    extraTypes[0] = typeof(List<Album>);
-                    extraTypes[1] = typeof(List<Track>);
-                    extraTypes[2] = typeof(List<Artist>);
-                    extraTypes[3] = typeof(List<Genre>);
-                    extraTypes[4] = typeof(List<PlayList>);
-                    extraTypes[5] = typeof(Track);
-                    extraTypes[6] = typeof(Artist);
-                    extraTypes[7] = typeof(Genre);
-                    extraTypes[8] = typeof(PlayList);
-                    extraTypes[9] = typeof(Wiki);
-                    extraTypes[10] = typeof(Image);
-
-                    //  Create the XMLSerialiser instance
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<Album>), extraTypes);
-                    //  Deserialise the Albums collection, that's the only collection persisted as 
-                    //  it contains the complete object graph.
-
-                    UnitOfWork.Albums = (List<Album>)serializer.Deserialize(reader);
-                }
-            }
-
-            //  Build the navigation properties and populate the other collection classes
-            //  within the MusicCollection In-Memory context.
-            //  It is included within the de-serialiser as it is most definitely part of 
-            //  that process.
-            //  the result of this deserialise, should be a completely reconstituted
-            //  In-Memory representation of the domain Model, to support the app.
-            await _navigationProperyBuilder.Build(_unitOfWork);        //  Blocking call.
-
-        }
-
-
-        private async Task Serialisemodel(IUnitOfWork UnitOfWork, StorageFile dataFile)
-        {
-            //  Now serialise the MusicCollection Albums only as XML and write to the file.
-            using (StreamWriter writer = new StreamWriter(await dataFile.OpenStreamForWriteAsync()))
-            {
-                XmlSerializer serialiser = new XmlSerializer(typeof(List<Album>));
-                serialiser.Serialize(writer, UnitOfWork.Albums);
-            }
-        }
-
     }
 }

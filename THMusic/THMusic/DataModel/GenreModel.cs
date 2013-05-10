@@ -13,10 +13,8 @@ using GalaSoft.MvvmLight;
 namespace THMusic.DataModel
 {
     /// <summary>
-    /// This <c>GroupModel</c> is used to support the MainViewNodel
-    /// as this can be sourced by 4 different Group categories:
-    /// Artist, Genre, Playlist and Album.  Therefore the ViewModel
-    /// must be able to swap with all the field names matching.
+    /// This <c>GenreModel</c> is used to support the AlbumModel
+    /// as it contains a collection of Genres.
     /// </summary>
     public class GenreModel : ObservableObject
     {
@@ -65,7 +63,7 @@ namespace THMusic.DataModel
 
         /// <summary>
         /// Gets or sets the LastFM url for Genre Information.
-        /// 
+        /// </summary>
         public string LastFMUrl
         {
             get { return _url;}

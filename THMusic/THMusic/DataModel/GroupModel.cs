@@ -13,6 +13,8 @@ using System;
 using GalaSoft.MvvmLight;
 using Windows.UI.Xaml.Media;
 
+using THMusic.Helpers;
+
 namespace THMusic.DataModel
 {
     /// <summary>
@@ -96,7 +98,7 @@ namespace THMusic.DataModel
         private async void LoadImageAsync()
         {
             //  Load the file as a bitMapImage.
-            _image = await DataModel.ImageLoader.LoadImageAsync(_imagePath);
+            _image = await ImageLoader.LoadImageAsync(_imagePath);
             //  Tell all the property has changed
             RaisePropertyChanged(() => Image);                                  
         }

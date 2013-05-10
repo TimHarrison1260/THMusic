@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using GalaSoft.MvvmLight;
 using Windows.UI.Xaml.Media;
 
+using THMusic.Helpers;
+
 namespace THMusic.DataModel
 {
     /// <summary>
@@ -119,7 +121,7 @@ namespace THMusic.DataModel
         private async void LoadImageLargeAsync()
         {
             //  Load the file as a bitMapImage.
-            _imageLarge = await DataModel.ImageLoader.LoadImageAsync(_imagePathLarge);
+            _imageLarge = await ImageLoader.LoadImageAsync(_imagePathLarge);
         }
 
 
@@ -168,7 +170,7 @@ namespace THMusic.DataModel
 
         private async void LoadImageMediumAsync()
         {
-            _imageMedium = await DataModel.ImageLoader.LoadImageAsync(_imagePathMedium);
+            _imageMedium = await ImageLoader.LoadImageAsync(_imagePathMedium);
         }
 
 

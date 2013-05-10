@@ -8,10 +8,7 @@
 //my own work and has not been submitted elsewhere in fulfilment of this or any other award.
 //***************************************************************************************************
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using Windows.ApplicationModel.Resources;
 using Windows.Globalization.DateTimeFormatting;

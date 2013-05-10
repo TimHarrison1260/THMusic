@@ -76,14 +76,6 @@ namespace Infrastructure.Repositories
         /// <returns>A string containing the path to the relevant image.</returns>
         public async Task<string> GetFirstAlbumImage(int Id)
         {
-            //  This query will not support parallelism, as it makes use of
-            //  the SelectMany statement which is not supported by PLinq yet.
-            //var image = _unitOrWork.Albums
-            //    .Where(a => a.Artist.Id == Id)
-            //    .SelectMany(a => a.Images)
-            //    .Where(i => i.Size == ImageSizeEnum.Large)
-            //    .First();
-
             var image = _unitOrWork.PlayLists
                 .Where(p => p.Id == Id)
                 .SelectMany(p => p.Tracks)
@@ -101,13 +93,6 @@ namespace Infrastructure.Repositories
         /// <returns>The total duration of the albums and tracks</returns>
         public async Task<TimeSpan> GetDuration(int Id)
         {
-            //  This query will not support parallelism, as it makes use of
-            //  the SelectMany statement which is not supported by PLinq yet.
-            //var duration = _unitOrWork.Albums
-            //    .Where(a => a.Artist.Id == Id)
-            //    .SelectMany(a => a.Tracks)
-            //    .Sum(t => t.Duration.Ticks);
-
             var duration = _unitOrWork.PlayLists
                 .Where(p => p.Id == Id)
                 .SelectMany(p => p.Tracks)
@@ -123,10 +108,6 @@ namespace Infrastructure.Repositories
         /// <returns>the count of albums belonging to the Artist</returns>
         public async Task<int> GetAlbums(int Id)
         {
-            //var number = _unitOrWork.Albums.AsParallel()
-            //    .Where(a => a.Artist.Id == Id)
-            //    .Count();
-
             var number = _unitOrWork.PlayLists
                 .Where(p => p.Id == Id)
                 .SelectMany(p => p.Tracks)
@@ -145,11 +126,6 @@ namespace Infrastructure.Repositories
         {
             //  This query will not support parallelism, as it makes use of
             //  the SelectMany statement which is not supported by PLinq yet.
-            //var number = _unitOrWork.Albums
-            //    .Where(a => a.Artist.Id == Id)
-            //    .SelectMany(a => a.Tracks)
-            //    .Count();
-
             var number = _unitOrWork.PlayLists
                 .Where(p => p.Id == Id)
                 .SelectMany(p => p.Tracks)

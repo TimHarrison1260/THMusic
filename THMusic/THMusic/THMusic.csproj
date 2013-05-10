@@ -124,7 +124,7 @@
     <Compile Include="DataModel\TrackModel.cs" />
     <Compile Include="DataModel\GenreModel.cs" />
     <Compile Include="DataModel\GroupModel.cs" />
-    <Compile Include="DataModel\ImageLoader.cs" />
+    <Compile Include="Helpers\ImageLoader.cs" />
     <Compile Include="Data\AlbumModelDataService.cs" />
     <Compile Include="Data\IMuisicFileDataService.cs" />
     <Compile Include="Data\MusicfileDataService.cs" />

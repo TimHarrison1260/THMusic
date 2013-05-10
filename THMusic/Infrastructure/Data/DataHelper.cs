@@ -46,9 +46,29 @@ namespace Infrastructure.Data
     /// does all of this stuff for you automatically.  Entity Framework and
     /// Windows 8 Store App, what's the chances of those two working together?
     /// </para>
+    /// <para>
+    /// Concurrency
+    /// </para>
+    /// <para>
+    /// This helper class is the only place in the application where Artist,
+    /// Genres and Playlist are physically updated or added to the Music
+    /// Collection.  The Albums and Tacks are updated within the Music Collection
+    /// class itself.  Therefore we define monitoring lock for the Artists,
+    /// Genres and Playlist collections for use in the sections where these
+    /// List(T) collections are updated.  This will ensure that only these
+    /// methods can perform the updates and any multiple instances of them
+    /// on different threads will have their access to these collections
+    /// serialised, ensuring the updates are thread-safe.
+    /// </para>
     /// </remarks>
     public class DataHelper
     {
+        //  Locking object for the Genres, Artists and Playlists.
+        private static object _GenreLock = new object();
+        private static object _ArtistLock = new object();
+        private static object _PlaylistLock = new object();
+
+
         #region Generate Unique id
 
         /// <summary>
@@ -113,9 +133,13 @@ namespace Infrastructure.Data
         /// <param name="Track">The track to be added</param>
         /// <param name="Album">The album the track belongs to</param>
         /// <returns>The updated track</returns>
+        /// <remarks>
+        /// This is a synchronous task because there are no waitiable operations either
+        /// needed or so use of List(T) is OK.
+        /// </remarks>
         public List<Track> AddTracksToContext(IUnitOfWork UnitOfWork, List<Track> Tracks, Album Album)
         {
-            var updatedTracks = new List<Track>();
+            var updatedTracks = new List<Track>();      
             foreach (var tr in Tracks)
             {
                 //  Generate the Track Id and update the track, if there isn't one already
@@ -203,17 +227,47 @@ namespace Infrastructure.Data
         /// Only add an AlbumId if to the AlbumIds collection if it's not already there.
         /// It won't be if the its is a New Album being created, but there will be when 
         /// reloading the persisted data.
+        /// <para>
+        /// Concurrency:    
+        /// </para>
+        /// <Para>
+        /// This routine provides a Monitor lock to ensure that only one instance of this
+        /// can modify the Genres collection at a time.
+        /// It locks from the point which a new Id is generated for the Genre being added
+        /// and retains that until the Genre is added to the Genres collection.
+        /// This type of lock is preferred to ensure the generated Id is updated within
+        /// the Genres collection before any other thread can try and Add a Genre which 
+        /// would require the Id for this one, which woudl be used in the GenerateId 
+        /// methods.  This is to avoid duplicate Id's being generated.
+        /// </Para>
+        /// <para>
+        /// This is a very course grained way of locking but is acceptible within this
+        /// application as it is a Windows 8 store app, and not subjected to multiple
+        /// users, only the individual threads within the application.  The performance
+        /// hit should not be that noticable here.
+        /// </para>
         /// </remarks>
         private Genre AddGenre(IUnitOfWork UnitOfWork, Genre Genre, Album Album)
         {
-            Genre.Albums = new List<Album>();
-            //          i.  Generate GenreId, if there isn't one, will be if reloading persisted data.
-            if (Genre.Id == 0)
-                Genre.Id = GenerateGenreId(UnitOfWork);
-            //          ii. Add album ref to Genre
-            AddAlbumToGenre(Genre, Album);
-            //          iii.Add Genre to Genres Collection
-            UnitOfWork.Genres.Add(Genre);
+
+            lock (_GenreLock)
+            {
+                Genre.Albums = new List<Album>();
+
+                //  Concurrency:  Lock between getting the Id and performing the update, as the
+                //                  this new Id won't be availble for checking purposes by another
+                //                  thread that is looking to add a Genre.  This should avoid the
+                //                  possiblilties of duplicate Id's
+
+                //          i.  Generate GenreId, if there isn't one, will be if reloading persisted data.
+
+                if (Genre.Id == 0)
+                    Genre.Id = GenerateGenreId(UnitOfWork);
+                //          ii. Add album ref to Genre
+                AddAlbumToGenre(Genre, Album);
+                //          iii.Add Genre to Genres Collection
+                UnitOfWork.Genres.Add(Genre);
+            }
 
             return Genre;
         }
@@ -236,33 +290,58 @@ namespace Infrastructure.Data
         /// It won't be if the its is a New Album being created, but there will be when 
         /// reloading the persisted data.
         /// </para>
+        /// <para>
+        /// Concurrency:    
+        /// </para>
+        /// <Para>
+        /// This routine provides a Monitor lock to ensure that only one instance of this
+        /// can modify the Genres collection at a time.
+        /// It locks from the point where the Genre to be updated is retrieved from 
+        /// the Genres 
+        /// and retains that until the Genre is updated in the Genres collection.
+        /// This type of lock is preferred to ensure that no other updates to the Genres
+        /// is attempted while this update occurs.
+        /// </Para>
+        /// <para>
+        /// This is a very course grained way of locking but is acceptible within this
+        /// application as it is a Windows 8 store app, and not subjected to multiple
+        /// users, only the individual threads within the application.  The performance
+        /// hit should not be that noticable here.
+        /// </para>
         /// </remarks>
         private Genre UpdateGenre(IUnitOfWork UnitOfWork, Genre Genre, Album Album)
         {
             //  TODO: Refactor this to use the concurrent collection.
 
-            //  Get the index of the Genre
-            var idx = UnitOfWork.Genres.FindIndex(g => g.Name == Genre.Name);
-            //  Get the Genre
-            var updatedGenre = UnitOfWork.Genres[idx];
+            var idx = 0;
 
-            //  If Album exists in the retrieved Genre.
-            var al = updatedGenre.Albums.FirstOrDefault(a => a.Id == Album.Id);
-            if (al != null)
+            lock (_GenreLock)
             {
-                //  The Album is found, so replace it
-                var alIdx = updatedGenre.Albums.IndexOf(al);
-                updatedGenre.Albums[alIdx] = Album;
-            }
-            else
-            {
-                //  Track dosn't exist in the Playlist.Tracks collection, so just add it.
-                AddAlbumToGenre(updatedGenre, Album);
-            }
 
-            //  Replace the Genre in the Genres collection
-            UnitOfWork.Genres[idx] = updatedGenre;
+                //  Get the index of the Genre
+                idx = UnitOfWork.Genres.FindIndex(g => g.Name == Genre.Name);
 
+                //  Get the Genre
+                var updatedGenre = UnitOfWork.Genres[idx];
+
+                //  If Album exists in the retrieved Genre.
+                var al = updatedGenre.Albums.FirstOrDefault(a => a.Id == Album.Id);
+                if (al != null)
+                {
+                    //  The Album is found, so replace it
+                    var alIdx = updatedGenre.Albums.IndexOf(al);
+                    updatedGenre.Albums[alIdx] = Album;
+                }
+                else
+                {
+                    //  Track dosn't exist in the Genres.Tracks collection, so just add it.
+                    AddAlbumToGenre(updatedGenre, Album);
+                }
+
+                //  Replace the Genre in the Genres collection
+                UnitOfWork.Genres[idx] = updatedGenre;
+            }
+            
             //  return the updated Genre
             return UnitOfWork.Genres[idx];
         }
@@ -278,6 +357,13 @@ namespace Infrastructure.Data
         /// Only add an AlbumId if to the AlbumIds collection if it's not already there.
         /// It won't be if the its is a New Album being created, but there will be when 
         /// reloading the persisted data.
+        /// </para>
+        /// <para>
+        /// Concurrency
+        /// </para>
+        /// <para>
+        /// This method doesn't need to be locked as it can only be called from either
+        /// AddGenre or Updategenre methods, and these are both locking.
         /// </para>
         /// </remarks>
         private void AddAlbumToGenre(Genre Genre, Album Album)
@@ -355,19 +441,46 @@ namespace Infrastructure.Data
         /// It won't be if the its is a New Album being created, but there will be when 
         /// reloading the persisted data.
         /// </para>
+        /// <para>
+        /// Concurrency:    
+        /// </para>
+        /// <Para>
+        /// This routine provides a Monitor lock to ensure that only one instance of this
+        /// can modify the Artists collection at a time.
+        /// It locks from the point which a new Id is generated for the Artist being added
+        /// and retains that until the Artist is added to the Genres collection.
+        /// This type of lock is preferred to ensure the generated Id is updated within
+        /// the Genres collection before any other thread can try and Add a Genre which 
+        /// would require the Id for this one, which woudl be used in the GenerateId 
+        /// methods.  This is to avoid duplicate Id's being generated.
+        /// </Para>
+        /// <para>
+        /// This is a very course grained way of locking but is acceptible within this
+        /// application as it is a Windows 8 store app, and not subjected to multiple
+        /// users, only the individual threads within the application.  The performance
+        /// hit should not be that noticable here.
+        /// </para>
         /// </remarks>
         private Artist AddArtist(IUnitOfWork UnitOfWork, Artist Artist, Album Album)
         {
-            Artist.Albums = new List<Album>();
+            //  
+            lock (_ArtistLock)
+            {
+                //  Concurrency:  Lock between getting the Id and performing the update, as the
+                //                  this new Id won't be availble for checking purposes by another
+                //                  thread that is looking to add an Artist.  This should avoid the
+                //                  possiblilties of duplicate Id's
 
-            //          i.  Generate ArtistId, if there isn'[t one already, will be reloading persisted data.
-            if (Artist.Id == 0)
-                Artist.Id = GenerateArtistId(UnitOfWork);
-            //          ii. Add album ref to Artist
-            AddAlbumToArtist(Artist, Album);
-            //          iii.Add Artist to Artists Collection
-            UnitOfWork.Artists.Add(Artist);
+                Artist.Albums = new List<Album>();
 
+                //          i.  Generate ArtistId, if there isn'[t one already, will be reloading persisted data.
+                if (Artist.Id == 0)
+                    Artist.Id = GenerateArtistId(UnitOfWork);
+                //          ii. Add album ref to Artist
+                AddAlbumToArtist(Artist, Album);
+                //          iii.Add Artist to Artists Collection
+                UnitOfWork.Artists.Add(Artist);
+            }
             return Artist;
         }
 
@@ -383,35 +496,56 @@ namespace Infrastructure.Data
         /// The update artist is returned so that it can replace the 
         /// Artist in the album, which means the navigation properties
         /// are up to date.
+        /// <para>
+        /// Concurrency:    
+        /// </para>
+        /// <Para>
+        /// This routine provides a Monitor lock to ensure that only one instance of this
+        /// can modify the Artists collection at a time.
+        /// It locks from the point where the Genre to be updated is retrieved from 
+        /// the Artist 
+        /// and retains that until the Artist is updated in the Artists collection.
+        /// This type of lock is preferred to ensure that no other updates to the Artist
+        /// are possible while this update occurs.  
+        /// </Para>
+        /// <para>
+        /// This is a very course grained way of locking but is acceptible within this
+        /// application as it is a Windows 8 store app, and not subjected to multiple
+        /// users, only the individual threads within the application.  The performance
+        /// hit should not be that noticable here.
+        /// </para>
         /// </remarks>
         private Artist UpdateArtist(IUnitOfWork UnitOfWork, Artist Artist, Album Album)
         {
-            //  TODO: Refactor this to use the concurrent collection.
+            int idx = 0;
 
-            //  Get the index of the Artist
-            var idx = UnitOfWork.Artists.FindIndex(a => a.Name == Artist.Name);
-            //  Get the Artist
-            var updatedArtist = UnitOfWork.Artists[idx];
-
-            //  If Album exists in the retrieved Artist.
-            var al = updatedArtist.Albums.FirstOrDefault(a => a.Id == Album.Id);
-            if (al != null)
+            lock (_ArtistLock)
             {
-                //  The Album is found, so replace it
-                var alIdx = updatedArtist.Albums.IndexOf(al);
-                updatedArtist.Albums[alIdx] = Album;
-            }
-            else
-            {
-                //  Album dosn't exist in the Artist.Albums collection, so just add it.
-                AddAlbumToArtist(updatedArtist, Album);
-            }
+                //  Get the index of the Artist
+                idx = UnitOfWork.Artists.FindIndex(a => a.Name == Artist.Name);
+                //  Get the Artist
+                var updatedArtist = UnitOfWork.Artists[idx];
 
-            //  Replace the Artist in the Artists collection
-            UnitOfWork.Artists[idx] = updatedArtist;
+                //  If Album exists in the retrieved Artist.
+                var al = updatedArtist.Albums.FirstOrDefault(a => a.Id == Album.Id);
+                if (al != null)
+                {
+                    //  The Album is found, so replace it
+                    var alIdx = updatedArtist.Albums.IndexOf(al);
+                    updatedArtist.Albums[alIdx] = Album;
+                }
+                else
+                {
+                    //  Album dosn't exist in the Artist.Albums collection, so just add it.
+                    AddAlbumToArtist(updatedArtist, Album);
+                }
 
+                //  Replace the Artist in the Artists collection
+                UnitOfWork.Artists[idx] = updatedArtist;
+            }
             //  return the updated Artist
-            return updatedArtist;
+            return UnitOfWork.Artists[idx];
+//            return updatedArtist;
         }
 
         /// <summary>
@@ -500,18 +634,45 @@ namespace Infrastructure.Data
         /// Only add an AlbumId if to the AlbumIds collection if it's not already there.
         /// It won't be if the its is a New Album being created, but there will be when 
         /// reloading the persisted data.
+        /// <para>
+        /// Concurrency:    
+        /// </para>
+        /// <Para>
+        /// This routine provides a Monitor lock to ensure that only one instance of this
+        /// can modify the Playlists collection at a time.
+        /// It locks from the point which a new Id is generated for the Playlsit being added
+        /// and retains that until the Genre is added to the Genres collection.
+        /// This type of lock is preferred to ensure the generated Id is updated within
+        /// the Playlists collection before any other thread can try and Add a Playlist which 
+        /// would require the Id for this one, which woudl be used in the GenerateId 
+        /// methods.  This is to avoid duplicate Id's being generated.
+        /// </Para>
+        /// <para>
+        /// This is a very course grained way of locking but is acceptible within this
+        /// application as it is a Windows 8 store app, and not subjected to multiple
+        /// users, only the individual threads within the application.  The performance
+        /// hit should not be that noticable here.
+        /// </para>
         /// </remarks>
         private PlayList AddPlaylist(IUnitOfWork UnitOfWork, PlayList Playlist, Track Track)
         {
-            //          i.  Generate PlaylistId, if not one already (will be reloading persisted data).
-            Playlist.Tracks = new List<Track>();
+            lock (_PlaylistLock)
+            {
+                //  Concurrency:  Lock between getting the Id and performing the update, as the
+                //                  this new Id won't be availble for checking purposes by another
+                //                  thread that is looking to add a Playlist.  This should avoid the
+                //                  possiblilties of duplicate Id's
 
-            if (Playlist.Id == 0)
-                Playlist.Id = GeneratePlaylistId(UnitOfWork);
-            //          ii. Add Track reference to the Playlist
-            AddTrackToPlaylist(Playlist, Track);
-            //          iii.Add Playlist to Pl;aylists Collection
-            UnitOfWork.PlayLists.Add(Playlist);
+                //          i.  Generate PlaylistId, if not one already (will be reloading persisted data).
+                Playlist.Tracks = new List<Track>();
+
+                if (Playlist.Id == 0)
+                    Playlist.Id = GeneratePlaylistId(UnitOfWork);
+                //          ii. Add Track reference to the Playlist
+                AddTrackToPlaylist(Playlist, Track);
+                //          iii.Add Playlist to Pl;aylists Collection
+                UnitOfWork.PlayLists.Add(Playlist);
+            }
 
             return Playlist;
         }
@@ -527,35 +688,58 @@ namespace Infrastructure.Data
         /// Only add an AlbumId if to the AlbumIds collection if it's not already there.
         /// It won't be if the its is a New Album being created, but there will be when 
         /// reloading the persisted data.
+        /// <para>
+        /// Concurrency:    
+        /// </para>
+        /// <Para>
+        /// This routine provides a Monitor lock to ensure that only one instance of this
+        /// can modify the Artists collection at a time.
+        /// It locks from the point where the Genre to be updated is retrieved from 
+        /// the Artist 
+        /// and retains that until the Artist is updated in the Artists collection.
+        /// This type of lock is preferred to ensure that no other updates to the Artist
+        /// are possible while this update occurs.  
+        /// </Para>
+        /// <para>
+        /// This is a very course grained way of locking but is acceptible within this
+        /// application as it is a Windows 8 store app, and not subjected to multiple
+        /// users, only the individual threads within the application.  The performance
+        /// hit should not be that noticable here.
+        /// </para>
         /// </remarks>
         private PlayList UpdatePlaylist(IUnitOfWork UnitOfWork, PlayList Playlist, Track Track)
         {
-            //  TODO: Refactor UpdatePlaylist to use the concurrent collection.
+            int idx = 0;
 
-            //  Get the index of the Playlist
-            var idx = UnitOfWork.PlayLists.FindIndex(p => p.Id == Playlist.Id);
-            //  Get the Playlist
-            var updatedPlaylist = UnitOfWork.PlayLists[idx];
-
-            //  If track exists in the playlist retrieved playlist.
-            var tr = updatedPlaylist.Tracks.FirstOrDefault(a => a.Id == Track.Id);
-            if (tr != null)
+            lock (_PlaylistLock)
             {
-                //  The track is found, so replace
-                var trIdx = updatedPlaylist.Tracks.IndexOf(tr);
-                updatedPlaylist.Tracks[trIdx] = Track;
-            }
-            else
-            {
-                //  Track dosn't exist in the Playlist.Tracks collection, so just add it.
-                AddTrackToPlaylist(updatedPlaylist, Track);
-            }
 
-            //  Replace the Playlist in the context
-            UnitOfWork.PlayLists[idx] = updatedPlaylist;
+                //  Get the index of the Playlist
+                idx = UnitOfWork.PlayLists.FindIndex(p => p.Id == Playlist.Id);
+                //  Get the Playlist
+                var updatedPlaylist = UnitOfWork.PlayLists[idx];
+
+                //  If track exists in the playlist retrieved playlist.
+                var tr = updatedPlaylist.Tracks.FirstOrDefault(a => a.Id == Track.Id);
+                if (tr != null)
+                {
+                    //  The track is found, so replace
+                    var trIdx = updatedPlaylist.Tracks.IndexOf(tr);
+                    updatedPlaylist.Tracks[trIdx] = Track;
+                }
+                else
+                {
+                    //  Track dosn't exist in the Playlist.Tracks collection, so just add it.
+                    AddTrackToPlaylist(updatedPlaylist, Track);
+                }
+
+                //  Replace the Playlist in the context
+                UnitOfWork.PlayLists[idx] = updatedPlaylist;
+            }
 
             //  return the updated Genre
-            return updatedPlaylist;
+            return UnitOfWork.PlayLists[idx];
+            //return updatedPlaylist;
         }
 
         /// <summary>

@@ -16,7 +16,6 @@ using Core.Model;
 using Core.Interfaces;
 using Infrastructure.Services;
 using Infrastructure.Data;
-using Infrastructure.Design;
 using Infrastructure.Repositories;
 
 namespace IoC

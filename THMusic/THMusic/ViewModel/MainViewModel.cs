@@ -10,24 +10,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Command;
-
-using Core.Services;
-using Core.Interfaces;
-using Core.Model;
 
 using THMusic.DataModel;
 using THMusic.Data;
 using THMusic.Navigation;
 using Windows.Storage.Pickers;
 using Windows.Storage;
-using System.Text;
-using System.Collections.Concurrent;
 
 
 namespace THMusic.ViewModel

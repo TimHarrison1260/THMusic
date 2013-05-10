@@ -33,41 +33,22 @@ namespace Infrastructure.Helpers
         /// <returns>An instance of the music file, includeing Tag information</returns>
         public static async Task<TagLib.File> GetMusicFileInfoAsync(StorageFile musicFile)
         {
-            //if (fileName != null)
-            //{
-            //    StorageFile musicFile = null;
-            //    StorageFolder musicFolder = folderName;
-
-            //    if (subFolderName != null)
-            //    {
-            //        musicFolder = await FileIOHelper.GetSubFolder(subFolderName, folderName);
-            //    }
-
-            //    musicFile = await FileIOHelper.GetFile(fileName, musicFolder);
-
-                //  Get the tag information and construct a Music Info Class.
-
             MusicFileInfo musicFileInformation = new MusicFileInfo();
 
-                //  Use Taglib Sharp to get the tag information.
-                //  1.  Create a file abstraction to avoid using banned libraries
-                //  http://stackoverflow.com/questions/13381494/c-sharp-windows-store-app-granting-capabilities-to-used-dll-s
-                //  Explanation is as follows
-                //  You can use TagLibSharp to load tags by creating a StreamFileAbstraction and passing that to File.Create. 
-                //  This won't use any banned APIs.
-                //  
-                //  The StreamFileAbstraction class is defined below.
-                //  I claim no credit for this, just that it works nicely.  The resource is disposed of
-                //  as the class inherits the Taglib.file.IFileAbstraction class.
-                IRandomAccessStreamWithContentType f = await musicFile.OpenReadAsync();
-                TagLib.File taglibMusicFile = TagLib.File.Create(new StreamFileAbstraction(musicFile.Name, f.AsStream()));
+            //  Use Taglib Sharp to get the tag information.
+            //  1.  Create a file abstraction to avoid using banned libraries
+            //  http://stackoverflow.com/questions/13381494/c-sharp-windows-store-app-granting-capabilities-to-used-dll-s
+            //  Explanation is as follows
+            //  You can use TagLibSharp to load tags by creating a StreamFileAbstraction and passing that to File.Create. 
+            //  This won't use any banned APIs.
+            //  
+            //  The StreamFileAbstraction class is defined below.
+            //  I claim no credit for this, just that it works nicely.  The resource is disposed of
+            //  as the class inherits the Taglib.file.IFileAbstraction class.
+            IRandomAccessStreamWithContentType f = await musicFile.OpenReadAsync();
+            TagLib.File taglibMusicFile = TagLib.File.Create(new StreamFileAbstraction(musicFile.Name, f.AsStream()));
 
-                return taglibMusicFile;
-
-                //musicFileInformation.AlbumTitle = taglibMusicFile.Tag.Album;
-                //return musicFileInformation;
-            //}
-            return null;
+            return taglibMusicFile;
         }
 
         /// <summary>

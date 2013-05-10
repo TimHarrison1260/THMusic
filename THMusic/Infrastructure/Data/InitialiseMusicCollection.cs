@@ -90,7 +90,7 @@ namespace Infrastructure.Data
             var DarkSideOfTheMoon = AlbumFactory.Create();
             //var DarkSideOfTheMoon = new Album();
             DarkSideOfTheMoon.Id = 1;
-            DarkSideOfTheMoon.Title = "The Dark Side of the Moon";
+            DarkSideOfTheMoon.Title = "Dark Side of the Moon";
             DarkSideOfTheMoon.Artist = pinkFloyd;
             DarkSideOfTheMoon.Released = new DateTime(1973, 06, 01);
 
@@ -190,7 +190,7 @@ namespace Infrastructure.Data
             var dsotmTrack1 = TrackFactory.Create();
             //var dsotmTrack1 = new Track();
             dsotmTrack1.Id = 1;
-            dsotmTrack1.Title = "Speak to Me / Breathe";
+            dsotmTrack1.Title = "Speak to Me/Breathe";
             dsotmTrack1.Number = 1;
             dsotmTrack1.Duration = TimeSpan.Parse("00:03:57");
             dsotmTrack1.Album = DarkSideOfTheMoon;
@@ -301,7 +301,7 @@ namespace Infrastructure.Data
             var DamTrack2 = TrackFactory.Create();
             //var DamTrack2 = new Track();
             DamTrack2.Id = 11;
-            DamTrack2.Title = "In My time of Need";
+            DamTrack2.Title = "In My Time Of Need";
             DamTrack2.Number = 2;
             DamTrack2.Duration = TimeSpan.Parse("00:05:49");
             DamTrack2.Album = Damnation;
@@ -312,7 +312,7 @@ namespace Infrastructure.Data
             var DamTrack3 = TrackFactory.Create();
             //var DamTrack3 = new Track();
             DamTrack3.Id = 12;
-            DamTrack3.Title = "Death Whispered a Lullaby";
+            DamTrack3.Title = "Death Whispered A Lullaby";
             DamTrack3.Number = 3;
             DamTrack3.Duration = TimeSpan.Parse("00:05:49");
             DamTrack3.Album = Damnation;
@@ -345,7 +345,7 @@ namespace Infrastructure.Data
             var DamTrack6 = TrackFactory.Create();
             //var DamTrack6 = new Track();
             DamTrack6.Id = 15;
-            DamTrack6.Title = "To Rid the Disease";
+            DamTrack6.Title = "To Rid The Disease";
             DamTrack6.Number = 6;
             DamTrack6.Duration = TimeSpan.Parse("00:06:21");
             DamTrack6.Album = Damnation;
