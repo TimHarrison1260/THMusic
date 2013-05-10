@@ -130,9 +130,15 @@ namespace THMusic.Design
             }
             return groupModels;
         }
-    
-    
-    
-    
+
+
+
+
+
+
+        public Task<GroupModel> LoadGroupAsync(int Id, GroupTypeEnum groupType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

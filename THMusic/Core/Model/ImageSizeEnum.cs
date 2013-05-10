@@ -12,10 +12,10 @@ namespace Core.Model
 {
     public enum ImageSizeEnum
     {
-        Small,
-        Medium,
-        Large,
-        ExtraLarge,
-        Mega
+        small,
+        medium,
+        large,
+        extralarge,
+        mega
     }
 }

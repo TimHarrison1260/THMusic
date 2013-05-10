@@ -119,6 +119,11 @@ namespace Infrastructure.Design
             throw new NotImplementedException();
         }
 
+        public Task AddTrackToAlbum(Album UpdatedAlbum)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public StorageFile PersistenceFile
         {
@@ -131,5 +136,7 @@ namespace Infrastructure.Design
                 throw new NotImplementedException();
             }
         }
+
+
     }
 }

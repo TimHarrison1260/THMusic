@@ -1,6 +1,6 @@
 ﻿//***************************************************************************************************
-//Name of File:     AlbumModelDataSource.cs
-//Description:      The AlbumModelDataSource provides loading and mapping functionality for the AlbumsViewModel.
+//Name of File:     AlbumModelDataService.cs
+//Description:      The AlbumModelDataService provides loading and mapping functionality for the AlbumsViewModel.
 //Author:           Tim Harrison
 //Date of Creation: Apr/May 2013.
 //
@@ -147,13 +147,13 @@ namespace THMusic.Data
                 mappedAlbum.ArtistName = a.Artist.Name;
 
                 //  Load the large and medium images only.
-                var largeImage = a.Images.FirstOrDefault(i => i.Size == ImageSizeEnum.Large);
+                var largeImage = a.Images.FirstOrDefault(i => i.Size == ImageSizeEnum.large);
                 if (largeImage != null)
                     mappedAlbum.SetImageLarge(largeImage.Url);
                 else
                     mappedAlbum.SetImageLarge(@"Assets\MediumGray.png");
 
-                var mediumImage = a.Images.FirstOrDefault(i => i.Size == ImageSizeEnum.Medium);
+                var mediumImage = a.Images.FirstOrDefault(i => i.Size == ImageSizeEnum.medium);
                 if (mediumImage != null)
                     mappedAlbum.SetImageMedium(mediumImage.Url);
                 else
@@ -194,7 +194,8 @@ namespace THMusic.Data
                         Title = tr.Title,                        
                         RawDuration = tr.Duration,  // set the TimeSpan property, not the localised display property
                         LastFMMbid = tr.Mbid,
-                        LastFMUrl = tr.Url
+                        LastFMUrl = tr.Url,
+                        MediaFilePath = tr.mediaFilePath
                     };
                     mappedAlbum.Tracks.Add(mappedTrack);
                 }

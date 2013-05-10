@@ -9,6 +9,7 @@
 //***************************************************************************************************
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using System.Xml.Serialization;
@@ -74,6 +75,33 @@ namespace Core.Model
         /// Gets or sets a collection of Genres categorizing the Album content
         /// </summary>
         public List<Genre> Genres { get; set; }
+
+
+        public void UpdateImage(string size, string Url)
+        {
+            var imageFactory = new Factories.ImageFactory();
+            var img = imageFactory.Create();
+            img.Size = (ImageSizeEnum)Enum.Parse(typeof(ImageSizeEnum), size);
+            img.Url = Url;
+            UpdateImage(img);
+        }
+
+        public void UpdateImage(Image Image)
+        {
+            //  See if the image is there already
+            var img = this.Images.FirstOrDefault(i => i.Size == Image.Size);
+            if (img != null)
+            {
+                //  yes => update it
+                var idx = this.Images.IndexOf(img);
+                this.Images[idx].Url = Image.Url;
+            }
+            else
+            {
+                //  no => add it
+                this.Images.Add(Image);
+            }
+        }
 
 
         /// <summary>

@@ -11,37 +11,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using System.Xml.Linq;              //  Linq to XML
 using System.Net;                   //  Url Encoding stuff
-//using System.Runtime.Serialization;
-//using System.ServiceModel.Web;
-
-//using System.Net.Http;
-//using Newtonsoft.Json;              //  Json.Net;
-
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 
 using Core.Services;
-using System.IO;
 
 namespace Infrastructure.Services
 {
     /// <summary>
-    /// This <c>LastFMProxh</c> class acts as a proxy to the LastFM http service, that
+    /// This <c>LastFMProxy</c> class acts as a proxy to the LastFM http service, that
     /// supplies information about music albums, artists and just about everything 
     /// else associated with music.
     /// </summary>
     public class LastFmProxy : ILastFMService
     {
         /// <summary>
+        /// This <c>GetAlbumInfoAsync</c> method is responsible for calling the 
+        /// LastFM album.getInfo method for the supplied search criteria.  It then 
+        /// maps the results to an instance of the <see cref="Core.Services.LastFMAlbumInfo"/>
+        /// class.
+        /// <para>
+        /// It uses the XElement.Load method of Linq to XML to call the service, and then
+        /// uses Linq-To-Xml to interrogate the result.  Xml is used in preference to 
+        /// JSon, as the JSon didn't deserialise properly with NewtonSoft.Json.  Rather
+        /// than attempt to write a JSon deserialised, Linq-To-Xml was used instead.
+        /// This had been used in a previous project so was a quicker option in this case.
+        /// </para>
         /// </summary>
-        /// <param name="albumName"></param>
-        /// <param name="artistName"></param>
-        /// <returns></returns>
+        /// <param name="albumName">The album to search for.</param>
+        /// <param name="artistName">The artist to search for.</param>
+        /// <returns>A populated instance of LastFMAlbumInfo class.</returns>
         /// <remarks>
         /// This methods contains no asynchronous call, and is therefore the bottleneck
         /// in the asynchronous nature of the application.  This is due to XElement not
@@ -79,8 +80,6 @@ namespace Infrastructure.Services
 
             try
             {
-
-
                 var result = XElement.Load(url);
 
                 //  TODO: Refactor this into more specific methods, and keep this one to combind the individual methods.
@@ -212,6 +211,8 @@ namespace Infrastructure.Services
             }
 
         }
+
+
 
     }
 }

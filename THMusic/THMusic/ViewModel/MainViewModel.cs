@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using GalaSoft.MvvmLight;
@@ -23,6 +24,10 @@ using Core.Model;
 using THMusic.DataModel;
 using THMusic.Data;
 using THMusic.Navigation;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using System.Text;
+using System.Collections.Concurrent;
 
 
 namespace THMusic.ViewModel
@@ -42,6 +47,7 @@ namespace THMusic.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private IGroupModelDataService _dataService;
+        private readonly IMusicFileDataService _musicFileDataService;
         private INavigationService _navigator;
 
 
@@ -54,11 +60,14 @@ namespace THMusic.ViewModel
         /// This follows the example supplied by the MVVMLight framework with modifications to use
         /// constructor injection via the SimpleIoC container.
         /// </remarks>
-        public MainViewModel(Data.IGroupModelDataService GroupModelDataService, INavigationService NavigationService)
+        public MainViewModel(Data.IGroupModelDataService GroupModelDataService, IMusicFileDataService MusicFileDataService , INavigationService NavigationService)
         {
             if (GroupModelDataService == null)
                 throw new ArgumentNullException("GroupModelDataService", "No valid DataService supplied");
             _dataService = GroupModelDataService;
+            if (MusicFileDataService == null)
+                throw new ArgumentNullException("MusicfileDataService", "No valid MusicFile DataService supplied");
+            _musicFileDataService = MusicFileDataService;
             if (NavigationService == null)
                 throw new ArgumentNullException("NavigationService", "No valid Navigation Service supplied");
             _navigator = NavigationService;
@@ -177,6 +186,20 @@ namespace THMusic.ViewModel
             }
         }
 
+        //  Testing only
+        private void UpdateGroup(int idx, GroupModel group)
+        {
+            _groups[idx] = group;
+            //  This does not cause the UI to refresh.
+            RaisePropertyChanged(() => Groups);
+        }
+        private void AddGroup(GroupModel group)
+        {
+            _groups.Add(group);
+            RaisePropertyChanged(() => Groups);
+        }
+
+
         private GroupModel _selectedGroup;
         public GroupModel SelectedGroup
         {
@@ -222,9 +245,45 @@ namespace THMusic.ViewModel
 
         public RelayCommand ImportMP3Command { get; set; }
 
-        private void ImportMP3Handler()
+        private async void ImportMP3Handler()
         {
-            //  Navigate away to the Import page for MP3 files
+            //  Handle this in the UI, it's a UI element.
+
+            // Set up and launch the Open Picker
+            FileOpenPicker fileOpenPicker = new FileOpenPicker();
+            fileOpenPicker.ViewMode = PickerViewMode.List;
+            fileOpenPicker.FileTypeFilter.Add(".mp3");
+            fileOpenPicker.FileTypeFilter.Add(".m4a");
+            fileOpenPicker.FileTypeFilter.Add(".wma");
+            fileOpenPicker.CommitButtonText = "Import";
+            fileOpenPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+            IReadOnlyList<StorageFile> files = await fileOpenPicker.PickMultipleFilesAsync();
+            if (files.Count > 0)
+            {
+                //  Process all tracks selected.
+                List<int> affectedGroups = await _musicFileDataService.ProcessMusicFiles(files, _grouping);
+
+                //foreach (var groupId in affectedGroups)
+                //{
+                //    //  Get the group details
+                //    var groupSummary = await _dataService.LoadGroupAsync(groupId, _grouping);
+
+                //    //  Update the Groups property, which should refresh only that group
+                //    var groupExists = _groups.FirstOrDefault(g => g.UniqueId.Id == groupId);
+                //    if (groupExists != null)
+                //    {
+                //        var idx = _groups.IndexOf(groupExists);
+                //        UpdateGroup(idx, groupSummary);
+                //    }
+                //    else
+                //    {
+                //        AddGroup(groupSummary);
+                //    }
+                //}
+
+
+                await LoadGroupsAsync();
+            }
 
         }
 

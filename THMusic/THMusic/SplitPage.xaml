@@ -11,6 +11,11 @@
     mc:Ignorable="d ignore"
     DataContext="{Binding Albums, Source={StaticResource Locator}}">
 
+
+    <UserControl.Resources>
+        <common:BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+
     <!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
@@ -75,7 +80,7 @@
                 because this is needed and the same format makes sense on the Import
                 page for MP3 and LastFM 
             -->
-            <uc:AlbumAndTrackView x:Name="itemDetailGrid" Margin="0,60,0,50" />
+            <uc:AlbumAndTrackPlayer x:Name="itemDetailGrid" Margin="0,60,0,50" />
         </ScrollViewer>
 
         <VisualStateManager.VisualStateGroups>

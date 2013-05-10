@@ -1,10 +1,12 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:THMusic.Common">
+    xmlns:local="using:THMusic.Common"
+    xmlns:uc="using:THMusic.CustomControls"
+    >
+    
 
     <!-- Templates for the Application -->
-
     
     <!-- The Main Group template on the first page of the application.  Portrait and Full Screen -->
     <DataTemplate x:Key="Group250x250ItemTemplate">
@@ -59,44 +61,13 @@
     <!-- The standard template for displaying tracks, 80 high  -->
     <DataTemplate x:Key="Track80ItemTemplate">
         <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-            <TextBlock x:Name="TrackNumber" Text="{Binding Number}" Width="30" Style="{StaticResource SubtitleTextStyle}" />
-            <TextBlock x:Name="TrackTitle" Text="{Binding Title}" Width="400" Style="{StaticResource SubtitleTextStyle}" />
-            <TextBlock x:Name="TrackDuration" Text="{Binding Duration}" HorizontalAlignment="Right" Style="{StaticResource SubtitleTextStyle}" />
+            <TextBlock x:Name="TrackNumber" Text="{Binding Number}" Margin="10,5,0,0" Width="30" Style="{StaticResource SubtitleTextStyle}" />
+            <TextBlock x:Name="TrackTitle" Text="{Binding Title}" Margin="10,5,0,0" Width="400" Style="{StaticResource SubtitleTextStyle}" />
+            <TextBlock x:Name="TrackDuration" Text="{Binding Duration}" Margin="10,5,0,0" HorizontalAlignment="Right" Style="{StaticResource SubtitleTextStyle}" />
+            <Button x:Name="TrackPlayButton" HorizontalAlignment="Left"  Margin="10,5,0,0"
+                Command="{Binding PlayTrackCommand}" x:Uid="TrackPlayButton"
+                Visibility="{Binding IsPlayable, Mode=TwoWay, Converter={StaticResource ResourceKey=BoolToVis}}"/>
         </StackPanel>
     </DataTemplate>
-
-
-    <!-- Custom Button styles, to allow the Name property to by Localised -->
-    <!-- App bar buttons -->
-    <!--<Style x:Key="CustomMusicInfoAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="MusicInfoAppBarButton"/>
-        <Setter Property="Content" Value="&#xE142;"/>
-    </Style>
-    <Style x:Key="CustomRefreshAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="RefreshAppBarButton"/>
-        <Setter Property="Content" Value="&#xE117;"/>
-    </Style>
-    <Style x:Key="CustomDownloadAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="DownloadAppBarButton"/>
-        <Setter Property="Content" Value="&#xE118;"/>
-    </Style>-->
-
-    <!-- On the Import LastFM stuff -->
-    <!--<Style x:Key="CustomSaveAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="SaveAppBarButton"/>
-        <Setter Property="Content" Value="&#xE105;"/>
-    </Style>
-    <Style x:Key="CustomClearSelectionAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="ClearSelectionAppBarButton"/>
-        <Setter Property="Content" Value="&#xE1C5;"/>
-    </Style>
-    <Style x:Key="CustomSearchAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="SearchAppBarButton"/>
-        <Setter Property="Content" Value="&#xE11A;"/>
-    </Style>
-    -->
-
-
-
 
 </ResourceDictionary>

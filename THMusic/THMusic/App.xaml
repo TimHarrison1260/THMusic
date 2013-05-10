@@ -4,25 +4,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:local="using:THMusic" 
              xmlns:localData="using:THMusic.Data" 
+             xmlns:common="using:THMusic.Common"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:vm="using:THMusic.ViewModel" 
              mc:Ignorable="d">
     <!--xmlns:vm="clr-namespace:THMusic.ViewModel"   See MVVMLight.Nuget.Readme.txt-->
     <Application.Resources>
-    <ResourceDictionary>
-        <!-- Application-specific resources -->
-        <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
-        <x:String x:Key="AppName" x:Uid="AppName">THMusic</x:String>
-        <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <!-- Application-specific resources -->
+            <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
+            <common:BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <x:String x:Key="AppName" x:Uid="AppName">THMusic</x:String>
+            <ResourceDictionary.MergedDictionaries>
             <!-- 
                     Styles that define common aspects of the platform look and feel
                     Required by Visual Studio project and item templates
-             -->
+                -->
                 <ResourceDictionary Source="Common/StandardStyles.xaml" />
                 <ResourceDictionary Source="Common/CustomStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Application.Resources>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>
     

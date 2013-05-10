@@ -393,7 +393,7 @@ namespace Infrastructure.Data
             //  Get the Artist
             var updatedArtist = UnitOfWork.Artists[idx];
 
-            //  If Album exists in the retrieved Genre.
+            //  If Album exists in the retrieved Artist.
             var al = updatedArtist.Albums.FirstOrDefault(a => a.Id == Album.Id);
             if (al != null)
             {
@@ -403,13 +403,12 @@ namespace Infrastructure.Data
             }
             else
             {
-                //  Track dosn't exist in the Playlist.Tracks collection, so just add it.
+                //  Album dosn't exist in the Artist.Albums collection, so just add it.
                 AddAlbumToArtist(updatedArtist, Album);
             }
 
-            //  Replace the Artist in the Genres collection
+            //  Replace the Artist in the Artists collection
             UnitOfWork.Artists[idx] = updatedArtist;
-            //  Replace the Artist back in the collection
 
             //  return the updated Artist
             return updatedArtist;

@@ -70,6 +70,7 @@ namespace THMusic.ViewModel
                 SimpleIoc.Default.Register<IGroupModelDataService, GroupModelDataService>();
                 SimpleIoc.Default.Register<IAlbumModelDataService, AlbumModelDataService>();
                 SimpleIoc.Default.Register<ILastFMModelDataService, LastFMModelDataService>();
+                SimpleIoc.Default.Register<IMusicFileDataService, MusicFileDataService>();
 
             }
 

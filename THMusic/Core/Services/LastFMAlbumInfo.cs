@@ -11,8 +11,6 @@ using System.Collections.Generic;
 
 namespace Core.Services
 {
-    //  TODO: Refactor this and complete the descriptions once the service is properly implemented.
-
     /// <summary>
     /// This <c>LastFMAlbumInfo</c> class describes the information retrieved from 
     /// the LastFM web service for various calls to its methods.

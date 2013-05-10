@@ -10,6 +10,7 @@
 
 using System;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using Windows.UI.Xaml.Media;
 
 namespace THMusic.DataModel
@@ -25,13 +26,27 @@ namespace THMusic.DataModel
         private TimeSpan _duration;
         private string _url;
         private string _mbid;
+        private string _mediaFilePath;
 
         /// <summary>
         /// ctor: Initialises the GroupModel.
         /// </summary>
         public TrackModel()
         {
+            PlayTrackCommand = new RelayCommand(PlayTrackHandler);
         }
+
+        public RelayCommand PlayTrackCommand { get; set; }
+        private void PlayTrackHandler()
+        {
+            //  This acts as a toggle, showing or hiding the MusicPlayer control
+            if (_playMe)
+                _playMe = false;
+            else
+                _playMe = true;
+            RaisePropertyChanged(() => PlayMe);
+        }
+
 
         /// <summary>
         /// Gets or sets the Name of the Group
@@ -128,12 +143,43 @@ namespace THMusic.DataModel
             get { return _mbid; }
             set
             {
-                if (_mbid != value)
+                if (_mbid != value && value != null)
                 {
                     _mbid = value;
                     RaisePropertyChanged(() => LastFMMbid);
                 }
             }
+        }
+
+        public string MediaFilePath
+        {
+            get 
+            {
+                return _mediaFilePath;
+            }
+            set
+            {
+                if (_mediaFilePath != value && value != null)
+                {
+                    _mediaFilePath = value;
+                    RaisePropertyChanged(() => MediaFilePath);
+                }
+            }
+        }
+
+        public bool IsPlayable
+        {
+            get 
+            {
+                var result = (_mediaFilePath != null && _mediaFilePath != string.Empty) ? true : false;
+                return result;
+            }
+        }
+
+        private bool _playMe = false;
+        public bool PlayMe
+        {
+            get { return _playMe; }
         }
 
     }

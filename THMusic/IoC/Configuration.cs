@@ -44,16 +44,18 @@ namespace IoC
 
             //  Register the Services
             iocKernel.Register<ILastFMService, LastFmProxy>();
+            iocKernel.Register<IMusicFileService, MusicFileService>();
 
             //  Register the factories
             iocKernel.Register<AbstractFactory<Artist>, ArtistFactory>();
             iocKernel.Register<AbstractFactory<Wiki>, WikiFactory>();
-            iocKernel.Register<AbstractFactory<Track>, TrackFactory>();
             iocKernel.Register<AbstractFactory<Image>, ImageFactory>();
             iocKernel.Register<AbstractFactory<Genre>, GenreFactory>();
             iocKernel.Register<AbstractFactory<PlayList>, PlaylistFactory>();
-            //  register last, it is dependent on the Artist and Wiki factories.
+            //  register here, it is dependent on the Artist and Wiki factories.
             iocKernel.Register<AbstractFactory<Album>, AlbumFactory>();
+            //  regist after album, it is dependent on Album and Artist factories.
+            iocKernel.Register<AbstractFactory<Track>, TrackFactory>();
         }
 
         /// <summary>

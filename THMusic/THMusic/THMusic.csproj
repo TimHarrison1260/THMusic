@@ -103,14 +103,20 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\AlbumAndTrackView.xaml.cs">
-      <DependentUpon>AlbumAndTrackView.xaml</DependentUpon>
+    <Compile Include="CustomControls\AlbumAndTrackPlayer.xaml.cs">
+      <DependentUpon>AlbumAndTrackPlayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\AlbumAndTrackViewer.xaml.cs">
+      <DependentUpon>AlbumAndTrackViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\AppBarBottom.xaml.cs">
       <DependentUpon>AppBarBottom.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\GroupAppBarTop.xaml.cs">
       <DependentUpon>GroupAppBarTop.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\MusicPlayer.xaml.cs">
+      <DependentUpon>MusicPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataModel\AlbumModel.cs" />
     <Compile Include="DataModel\GroupTypeEnum.cs" />
@@ -120,15 +126,12 @@
     <Compile Include="DataModel\GroupModel.cs" />
     <Compile Include="DataModel\ImageLoader.cs" />
     <Compile Include="Data\AlbumModelDataService.cs" />
+    <Compile Include="Data\IMuisicFileDataService.cs" />
+    <Compile Include="Data\MusicfileDataService.cs" />
     <Compile Include="Design\DesignArtistRepository.cs" />
     <Compile Include="Data\GroupModelDataService.cs" />
-    <Compile Include="Data\Helpers\FileIOHelper.cs" />
-    <Compile Include="Data\Helpers\MusicFileHelper.cs" />
-    <Compile Include="Data\Helpers\NamespaceDoc.cs" />
     <Compile Include="Data\IAlbumModelDataService.cs" />
     <Compile Include="Data\IGroupModelDataService.cs" />
-    <Compile Include="Data\IMusicInfo.cs" />
-    <Compile Include="Data\MusicInfo.cs" />
     <Compile Include="DataModel\NamespaceDoc.cs" />
     <Compile Include="Data\ILastFMModelDataService.cs" />
     <Compile Include="Data\LastFMModelDataservice.cs" />
@@ -195,7 +198,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomControls\AlbumAndTrackView.xaml">
+    <Page Include="CustomControls\AlbumAndTrackPlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\AlbumAndTrackViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -204,6 +211,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomControls\GroupAppBarTop.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\MusicPlayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

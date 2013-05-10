@@ -20,7 +20,7 @@ namespace Core.Factories
             var newImage = new ConcreteImage()
             {
                 Id = 0,
-                Size = ImageSizeEnum.Small,
+                Size = ImageSizeEnum.small,
                 Url = string.Empty
             };
             return newImage;

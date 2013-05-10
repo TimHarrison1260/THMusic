@@ -415,79 +415,79 @@ namespace Infrastructure.Data
             var dsotmImageSmall = ImageFactory.Create();
             //var dsotmImageSmall = new Image();
             dsotmImageSmall.Id = 1;
-            dsotmImageSmall.Size = ImageSizeEnum.Small;
+            dsotmImageSmall.Size = ImageSizeEnum.small;
             dsotmImageSmall.Url = string.Empty;
 
             var dsotmImageMedium = ImageFactory.Create();
             //var dsotmImageMedium = new Image();
             dsotmImageMedium.Id = 2;
-            dsotmImageMedium.Size = ImageSizeEnum.Medium;
+            dsotmImageMedium.Size = ImageSizeEnum.medium;
             dsotmImageMedium.Url = @"http://userserve-ak.last.fm/serve/64s/69704236.png";
             //dsotmImageMedium.Url = @"DarkSideOfTheMoonMedium.png";
 
             var dsotmImageLarge = ImageFactory.Create();
             //var dsotmImageLarge = new Image();
             dsotmImageLarge.Id = 3;
-            dsotmImageLarge.Size = ImageSizeEnum.Large;
+            dsotmImageLarge.Size = ImageSizeEnum.large;
             dsotmImageLarge.Url = @"http://userserve-ak.last.fm/serve/174s/69704236.png";
             //dsotmImageLarge.Url = @"DarkSideOfTheMoonLarge.png";
 
             var dsotmImageExtraLarge = ImageFactory.Create();
             //var dsotmImageExtraLarge = new Image();
             dsotmImageExtraLarge.Id = 4;
-            dsotmImageExtraLarge.Size = ImageSizeEnum.ExtraLarge;
+            dsotmImageExtraLarge.Size = ImageSizeEnum.extralarge;
             dsotmImageExtraLarge.Url = string.Empty;
 
             var dsotmImageMega = ImageFactory.Create();
             //var dsotmImageMega = new Image();
             dsotmImageMega.Id = 5;
-            dsotmImageMega.Size = ImageSizeEnum.Mega;
+            dsotmImageMega.Size = ImageSizeEnum.mega;
             dsotmImageMega.Url = string.Empty;
 
 
             var damImageSmall = ImageFactory.Create();
             //var damImageSmall = new Image();
             damImageSmall.Id = 6;
-            damImageSmall.Size = ImageSizeEnum.Small;
+            damImageSmall.Size = ImageSizeEnum.small;
             damImageSmall.Url = string.Empty;
 
             var damImageMedium = ImageFactory.Create();
             //var damImageMedium = new Image();
             damImageMedium.Id = 7;
-            damImageMedium.Size = ImageSizeEnum.Medium;
+            damImageMedium.Size = ImageSizeEnum.medium;
             damImageMedium.Url = @"http://userserve-ak.last.fm/serve/64s/86402755.png";
             //damImageMedium.Url = @"DamnationMedium.png";
 
             var damImageLarge = ImageFactory.Create();
             //var damImageLarge = new Image();
             damImageLarge.Id = 8;
-            damImageLarge.Size = ImageSizeEnum.Large;
+            damImageLarge.Size = ImageSizeEnum.large;
             damImageLarge.Url = @"http://userserve-ak.last.fm/serve/174s/86402755.png";
             //damImageLarge.Url = @"DamnationLarge.png";
 
             var damImageExtraLarge = ImageFactory.Create();
             //var damImageExtraLarge = new Image();
             damImageExtraLarge.Id = 9;
-            damImageExtraLarge.Size = ImageSizeEnum.ExtraLarge;
+            damImageExtraLarge.Size = ImageSizeEnum.extralarge;
             damImageExtraLarge.Url = string.Empty;
 
             var damImageMega = ImageFactory.Create();
             //var damImageMega = new Image();
             damImageMega.Id = 10;
-            damImageMega.Size = ImageSizeEnum.Mega;
+            damImageMega.Size = ImageSizeEnum.mega;
             damImageMega.Url = string.Empty;
 
 
             var wywhImageMedium = ImageFactory.Create();
             //var damImageMedium = new Image();
             wywhImageMedium.Id = 11;
-            wywhImageMedium.Size = ImageSizeEnum.Medium;
+            wywhImageMedium.Size = ImageSizeEnum.medium;
             wywhImageMedium.Url = @"http://userserve-ak.last.fm/serve/64s/40625357.png";
 
             var wywhImageLarge = ImageFactory.Create();
             //var damImageLarge = new Image();
             wywhImageLarge.Id = 12;
-            wywhImageLarge.Size = ImageSizeEnum.Large;
+            wywhImageLarge.Size = ImageSizeEnum.large;
             wywhImageLarge.Url = @"http://userserve-ak.last.fm/serve/174s/40625357.png";
 
 

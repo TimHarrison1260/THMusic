@@ -135,8 +135,10 @@
     <Compile Include="Model\Track.cs" />
     <Compile Include="Model\Wiki.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IMusicFileService.cs" />
     <Compile Include="Services\ILastFMService.cs" />
     <Compile Include="Services\LastFMAlbumInfo.cs" />
+    <Compile Include="Services\MusicFileInfo.cs" />
     <Compile Include="Services\NamespaceDoc.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

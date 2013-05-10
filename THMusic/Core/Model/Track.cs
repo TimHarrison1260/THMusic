@@ -89,6 +89,8 @@ namespace Core.Model
         /// Gets or sets the url that points to the LastFM information page for this track
         /// </summary>
         public string Url { get; set; }
+
+        public string mediaFilePath { get; set; }
         /// <summary>
         /// Gets or sets the navigation reference to the Album this track belongs to.
         /// </summary>

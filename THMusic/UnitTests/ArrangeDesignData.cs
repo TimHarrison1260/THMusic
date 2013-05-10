@@ -25,7 +25,7 @@ namespace UnitTests
             var _artistFactory = new ArtistFactory();
             var _wikiFactory = new WikiFactory();
             var _albumFactory = new AlbumFactory(_artistFactory, _wikiFactory);
-            var _trackFactory = new TrackFactory();
+            var _trackFactory = new TrackFactory(_artistFactory, _albumFactory);
             var _imageFactory = new ImageFactory();
 
             //  Instantiate the DesignMusicCollection which contains static data, used at design time, 

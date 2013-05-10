@@ -1,0 +1,33 @@
+﻿<UserControl
+    x:Class="THMusic.CustomControls.MusicPlayer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:THMusic.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <StackPanel x:Name="PlayerControls"
+                        Orientation="Horizontal"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsPlayable, Mode=TwoWay, Converter={StaticResource ResourceKey=BoolToVis}}">
+                <Button x:Name="PlayButton" x:Uid="PlayerPlayButton" Margin="10,5,0,5" Click="PlayButton_Click" />
+                <Button x:Name="PauseButton" x:Uid="PlayerPauseButton" Margin="10,5,0,5" Click="PauseButton_Click"/>
+                <Button x:Name="StopButton" x:Uid="PlayerStopButton"  Margin="10,5,0,5" Click="StopButton_Click" />
+                <Button x:Name="RewindButton" x:Uid="PlayerRewindButton" Margin="10,5,0,5" Click="RewindButton_Click" />
+                <Button x:Name="ForwardButton" x:Uid="PlayerForwardButton" Margin="10,5,0,5" Click="ForwardButton_Click" />
+            </StackPanel>
+            <TextBlock Name="MedialFilePath" Text="{Binding MediaFilePath}" Margin="0 10,0,10" Visibility="Collapsed" />
+            <MediaElement Name="MediaPlayer"
+                          AutoPlay="true" 
+                          AudioCategory="BackgroundCapableMedia"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

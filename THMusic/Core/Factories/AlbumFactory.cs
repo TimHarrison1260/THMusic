@@ -41,7 +41,6 @@ namespace Core.Factories
                 Id = 0,
                 Title = string.Empty,
                 Artist = _artistFactory.Create(),
-                //Artist = new ConcreteArtist(),            //  Watch this, NOT HERE, BAD BAD BAD!!!!!!!  Use ArtistFactory
                 Tracks = new List<Track>(),
                 Images = new List<Image>(),
                 Genres = new List<Genre>(),
@@ -49,7 +48,6 @@ namespace Core.Factories
                 Mbid = string.Empty,
                 Url = string.Empty,
                 Wiki = _wikiFactory.Create()
-                //Wiki = new ConcreteWiki()                  //  BAD BAD,, Use the Wiki Factory
             };
             return newAlbum;
         }

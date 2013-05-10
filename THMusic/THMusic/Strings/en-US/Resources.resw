@@ -200,4 +200,28 @@
     <value>Playlists</value>
     <comment>A localised string representing the enumeration GroupTypeEnum</comment>
   </data>
+  <data name="TrackPlayButton.Content" xml:space="preserve">
+    <value>Play</value>
+    <comment>This shows against a track that can be played, as the media file is specified</comment>
+  </data>
+  <data name="PlayerForwardButton.Content" xml:space="preserve">
+    <value>Fwd</value>
+    <comment>The Fast Forward button on the AudioPlay User control</comment>
+  </data>
+  <data name="PlayerPauseButton.Content" xml:space="preserve">
+    <value>Pause</value>
+    <comment>The Pause button on the AudioPlayer User control</comment>
+  </data>
+  <data name="PlayerPlayButton.Content" xml:space="preserve">
+    <value>Play</value>
+    <comment>The play button on the AudioPlayer User control</comment>
+  </data>
+  <data name="PlayerRewindButton.Content" xml:space="preserve">
+    <value>Rew</value>
+    <comment>The Rewind button on the AudioPlayer User control</comment>
+  </data>
+  <data name="PlayerStopButton.Content" xml:space="preserve">
+    <value>Stop</value>
+    <comment>The Stop button on the AudioPlayer User control</comment>
+  </data>
 </root>

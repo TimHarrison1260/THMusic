@@ -80,17 +80,6 @@ namespace Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Creates a New Album in the Domain model
-        /// </summary>
-        /// <param name="entity">The album to be created</param>
-        /// <returns>The new instance of the Album</returns>
-        public override async Task<Album> CreateAsync(Album entity)
-        {
-            var newalbum = await _unitOrWork.CreateAlbum(entity);
-            return newalbum;  
-        }
-
-        /// <summary>
         /// Gets all Albums belonging to the specified Genre.
         /// </summary>
         /// <param name="GenreId">The Id of the Genre.</param>
@@ -154,8 +143,52 @@ namespace Infrastructure.Repositories
             return playlistAlbums;
         }
 
+        /// <summary>
+        /// Creates a New Album in the Domain model
+        /// </summary>
+        /// <param name="entity">The album to be created</param>
+        /// <returns>The new instance of the Album</returns>
+        public override async Task<Album> CreateAsync(Album entity)
+        {
+            var newalbum = await _unitOrWork.CreateAlbum(entity);
+            return newalbum;
+        }
 
+        /// <summary>
+        /// Check if a mediafile, specified by its absolute path, has
+        /// already been imported into the collection.
+        /// </summary>
+        /// <param name="mediaFilePath">The path of the mediafile</param>
+        /// <returns>Returns <c>true</c> if it has, otherwise <c>false</c></returns>
+        public async Task<bool> IsMediaFileImported(string mediaFilePath)
+        {
+            var result = _unitOrWork.Tracks
+                .FirstOrDefault(t => t.mediaFilePath == mediaFilePath);
+            return (result != null) ? true : false;
+        }
 
+        /// <summary>
+        /// Check if an album has already been imported into the Music
+        /// Collection.  It checks the Album name and the Artist name.
+        /// </summary>
+        /// <param name="ArtistName">Artists Name</param>
+        /// <param name="AlbumName">album Name</param>
+        /// <returns>Returns the Album if it exists, otherwise it returns NULL</returns>
+        public async Task<Album> IsAlbumAlreadyImported(string ArtistName, string AlbumName)
+        {
+            var album = _unitOrWork.Albums
+                .FirstOrDefault(a => a.Title == AlbumName && a.Artist.Name == ArtistName);
+            return album;
+        }
+
+        /// <summary>
+        /// Add a new track to an existing album.
+        /// </summary>
+        /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
+        public async Task AddTrackToAlbum(Album entity)
+        {
+            await _unitOrWork.AddTrackToAlbum(entity);
+        }
 
     }
 }

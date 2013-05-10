@@ -325,6 +325,25 @@ namespace THMusic.DataModel
             }
         }
 
+        private TrackModel _selectedTrack;
+        public TrackModel SelectedTrack
+        {
+            get 
+            {
+                return _selectedTrack; 
+            }
+            set
+            {
+                if (_selectedTrack != value && value != null)
+                {
+                    _selectedTrack = value;
+                    RaisePropertyChanged(() => SelectedTrack);
+                }
+            }
+        }
+
+
+
         /// <summary>
         /// Gets or sets the collection of genres the album is tagged with
         /// </summary>

@@ -1,4 +1,15 @@
-﻿using System;
+﻿//***************************************************************************************************
+//Name of File:     IAlbumModelDataService.cs
+//Description:      The IAlbumModelDataService interface provides loading and mapping functionality 
+//                  for the AlbumViewModel.
+//Author:           Tim Harrison
+//Date of Creation: Apr/May 2013.
+//
+//I confirm that the code contained in this file (other than that provided or authorised) is all 
+//my own work and has not been submitted elsewhere in fulfilment of this or any other award.
+//***************************************************************************************************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

@@ -9,6 +9,7 @@
 //***************************************************************************************************
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -197,6 +198,76 @@ namespace Infrastructure.Data
             this.Albums.Add(newAlbum);
 
             return newAlbum;
+        }
+
+        /// <summary>
+        /// Add a new track to an existing album in the In-Memory context, updating the related 
+        /// entities and ensuring the navigation properties are correctly updated.
+        /// </summary>
+        /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
+        public async Task AddTrackToAlbum(Album UpdatedAlbum)
+        {
+            //  Get the existing album
+            //  get by Id
+            var existingAlbum = this.Albums.FirstOrDefault(a => a.Id == UpdatedAlbum.Id);
+            //  If not then check by artist Name and Album Title
+            if (existingAlbum == null)
+                existingAlbum = this.Albums.FirstOrDefault(a => a.Title == UpdatedAlbum.Title && a.Artist.Name == UpdatedAlbum.Artist.Name);
+
+            //  Only process it if the ablum has been found.
+            if (existingAlbum != null)
+            {
+                var albumIdx = this.Albums.IndexOf(existingAlbum);
+
+                var newTrack = UpdatedAlbum.Tracks.FirstOrDefault();
+                //  1.  Check if track already exists
+                var existingTrack = existingAlbum.Tracks.FirstOrDefault(t => t.Title == newTrack.Title);
+                if (existingTrack != null)
+                {
+                    //      1a. Update all the track related fields
+                    //  Get the index of the track.
+                    var idx = existingAlbum.Tracks.IndexOf(existingTrack);
+
+                    //  Add the new track to the tracks collection and update the Id and album reference
+                    //  The updated album contains only the one track, this needs a list
+                    var updatedTrack = _helper.AddTracksToContext(this, UpdatedAlbum.Tracks, existingAlbum);
+                    //  Now replace it in the Album tracks
+                    existingAlbum.Tracks[idx] = updatedTrack[0];
+                }
+                else
+                {
+                    //      1b. Add the track to the album
+                    //  Add the new track to the tracks collection and update the Id and album reference
+                    //  The updated album contains only the one track, this needs a list
+                    var updatedTrack = _helper.AddTracksToContext(this, UpdatedAlbum.Tracks, existingAlbum);
+                    //  now add it to the albums tracks
+                    existingAlbum.Tracks.Add(updatedTrack[0]);
+                }
+
+                //  Add any new Genres to the existing ones, duplicates will be removed when the Genres are
+                //  updated by the AddGenresToContext routine.
+                foreach (var g in UpdatedAlbum.Genres)
+                {
+                    var existingGenre = existingAlbum.Genres
+                        .FirstOrDefault(gn => gn.Name == g.Name);
+                    if (existingAlbum == null)
+                        existingAlbum.Genres.Add(g);
+                }
+                //  3   Add each genre to the Genres collection, ensure navigation properties are updated
+                var updatedGenres = _helper.AddGenresToContext(this, UpdatedAlbum.Genres, existingAlbum);
+                existingAlbum.Genres = updatedGenres;
+
+                //  Replace the Album reference in the Artist, as it has been updated to ensure the
+                //  navigation properties are up to date.  It will find the artist, and the album too
+                //  so the album reference will be replaced.
+                var updatedArtist = _helper.AddArtistToContext(this, existingAlbum.Artist, existingAlbum);
+                //  update the reference to the artist in the existingAlbum
+                existingAlbum.Artist = updatedArtist;
+
+
+                //Finally replace the Album in the Albums collection
+                this.Albums[albumIdx] = existingAlbum;
+            }
         }
 
 

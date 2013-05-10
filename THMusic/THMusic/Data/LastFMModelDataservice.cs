@@ -90,11 +90,12 @@ namespace THMusic.Data
         }
 
         /// <summary>
-        /// Helper method to load the GroupModel that supports the MainViewModel
-        /// with the corresponding group category.
+        /// Gets the album information from the LastFM album.getInfo service
         /// </summary>
-        /// <returns></returns>
-        public  async Task<AlbumModel> GetLastFMAlbumInfoAsync(string ArtistName, string AlbumName)  //, ILastFMService lastFMService)
+        /// <param name="ArtistName">The Artist to search for</param>
+        /// <param name="AlbumName">The Album to search for</param>
+        /// <returns>The Album information as an AlbumModel class.</returns>
+        public async Task<AlbumModel> GetLastFMAlbumInfoAsync(string ArtistName, string AlbumName)
         {
             //  Call the LastFMService 
             //  Check, this will include the returned information for the Artist/Album combination.
@@ -190,18 +191,27 @@ namespace THMusic.Data
         }
 
         /// <summary>
-        /// Taks the LastFMAlbum and calls the albumRepository to create it in the domain
+        /// Adds the Album to the Domain Model.
         /// </summary>
-        /// <param name="lastFMAlbum">The LastFMAlbum to be created</param>
-        /// <returns>The async Task</returns>
+        /// <param name="lastFMAlbum">The album to be added</param>
+        /// <returns>A success or failure indicator</returns>
         public async Task<string> ImportAlbumAsync(AlbumModel lastFMAlbum)
         {
-            //  Map the AlbumModel (UI layer) to the Album (domain).
-            var newAlbum = MapAlbumModelToAlbum(lastFMAlbum);
+            //  Check if album exists already.
+            var albumExists = await _albumRepository.IsAlbumAlreadyImported(lastFMAlbum.ArtistName, lastFMAlbum.Title);
+            if (albumExists != null)
+            {
+                return "Album already exists";
+            }
+            else
+            {
+                //  Map the AlbumModel (UI layer) to the Album (domain).
+                var newAlbum = MapAlbumModelToAlbum(lastFMAlbum);
 
-            //  Call the repository to Create the new album in the domain.
-            var returnedAlbum = await _albumRepository.CreateAsync(newAlbum);
-            return (returnedAlbum != null) ? "AlbumImportedOK" : "AlbumImportFailed";
+                //  Call the repository to Create the new album in the domain.
+                var returnedAlbum = await _albumRepository.CreateAsync(newAlbum);
+                return (returnedAlbum != null) ? "AlbumImportedOK" : "AlbumImportFailed";
+            }
         }
 
         /// <summary>
@@ -225,11 +235,11 @@ namespace THMusic.Data
             //  Copy the Images
             newAlbum.Images = new List<Image>();
             Image mediumImage = _imageFactory.Create();
-            mediumImage.Size = ImageSizeEnum.Medium;
+            mediumImage.Size = ImageSizeEnum.medium;
             mediumImage.Url = lastFMAlbum.ImagePathMedium;
             newAlbum.Images.Add(mediumImage);
             Image largeImage = _imageFactory.Create();
-            largeImage.Size = ImageSizeEnum.Large;
+            largeImage.Size = ImageSizeEnum.large;
             largeImage.Url = lastFMAlbum.ImagePathLarge;
             newAlbum.Images.Add(largeImage);
 

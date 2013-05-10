@@ -41,10 +41,30 @@ namespace Core.Interfaces
         /// <returns>A collection of Albums</returns>
         Task<IEnumerable<Album>> GetAlbumsForPlaylist(int PlaylistId);
         /// <summary>
-        /// Creates a new album in the donam
+        /// Creates a new album in the domain.
         /// </summary>
         /// <param name="album">The album to be added to the domain</param>
         /// <returns>The instance of the newly created album</returns>
         Task<Album> CreateAsync(Album album);
+        /// <summary>
+        /// Check if a mediafile, specified by its absolute path, has
+        /// already been imported into the collection.
+        /// </summary>
+        /// <param name="mediaFilePath">The path of the mediafile</param>
+        /// <returns>Returns <c>true</c> if it has, otherwise <c>false</c></returns>
+        Task<bool> IsMediaFileImported(string mediaFilePath);
+        /// <summary>
+        /// Check if an album has already been imported into the Music
+        /// Collection.  It checks the Album name and the Artist name.
+        /// </summary>
+        /// <param name="ArtistName">Artists Name</param>
+        /// <param name="AlbumName">album Name</param>
+        /// <returns>Returns the Album if it exists, otherwise it returns NULL</returns>
+        Task<Album> IsAlbumAlreadyImported(string ArtistName, string AlbumName);
+        /// <summary>
+        /// Add a new track to an existing album.
+        /// </summary>
+        /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
+        Task AddTrackToAlbum(Album entity);
     }
 }

@@ -16,9 +16,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace THMusic.CustomControls
 {
-    public sealed partial class AlbumAndTrackView : UserControl
+    public sealed partial class AlbumAndTrackViewer : UserControl
     {
-        public AlbumAndTrackView()
+        public AlbumAndTrackViewer()
         {
             this.InitializeComponent();
         }

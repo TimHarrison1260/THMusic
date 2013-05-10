@@ -1,6 +1,6 @@
 ﻿//***************************************************************************************************
-//Name of File:     GroupModelDataSource.cs
-//Description:      The GroupModelDataSource provides loading and mapping functionality for the GroupViewModel.
+//Name of File:     GroupModelDataService.cs
+//Description:      The GroupModelDataService provides loading and mapping functionality for the GroupViewModel.
 //Author:           Tim Harrison
 //Date of Creation: Apr/May 2013.
 //
@@ -60,16 +60,14 @@ namespace THMusic.Data
 
 
         /// <summary>
-        /// Helper method to load the GroupModel that supports the MainViewModel
-        /// with the corresponding group category.
+        /// Gets the Group summary information for all albums in the collection
         /// </summary>
-        /// <returns></returns>
+        /// <param name="groupType">The Type of grouping. <see cref="THMusic.DataModel.GroupTypeEnum"/>.</param>
+        /// <returns>The collection of Group summaries</returns>
         public async Task<List<GroupModel>> LoadAsync(GroupTypeEnum groupType = GroupTypeEnum.Artist)
         {
-            //  TODO: convert this to accept the Group Type parameter.  Only use Artist for now.
             //  Call the repository 
             var groups = new List<GroupModel>();
-
 
             switch (groupType)
             {
@@ -98,6 +96,51 @@ namespace THMusic.Data
             return groups;
         }
 
+
+        public async Task<GroupModel> LoadGroupAsync(int Id, GroupTypeEnum groupType)
+        {
+            //  Call the repository 
+            var groups = new List<GroupModel>();
+
+            switch (groupType)
+            {
+                case GroupTypeEnum.Artist:
+                    {
+                        var artists = new List<Artist>();
+                        artists.Add(await _artistRepository.GetById(Id));
+                        var groupRepository = _artistRepository as IGroupRepository<Artist>;
+                        groups = await LoadGroupsAsync<Artist>(artists, groupType, groupRepository);
+                        break;
+                    }
+                case GroupTypeEnum.Genre:
+                    {
+                        var genres = new List<Genre>();
+                        genres.Add(await _genreRepository.GetById(Id));
+                        var groupRepository = _genreRepository as IGroupRepository<Genre>;
+                        groups = await LoadGroupsAsync<Genre>(genres, groupType, groupRepository);
+                        break;
+                    }
+            }
+            return groups[0];
+        }
+
+
+        /// <summary>
+        /// Performs the loading of the group, depending on the group type supplied. 
+        /// <see cref="THMusic.DataModel.GroupTypeEnum"/>.
+        /// </summary>
+        /// <typeparam name="T">The generic Type that determines then actual Group</typeparam>
+        /// <param name="groups">The groups</param>
+        /// <param name="groupType">The type of the groups</param>
+        /// <param name="repository">The instance of the GroupRepository</param>
+        /// <returns>A collection of the Group Summaries</returns>
+        /// <remarks>
+        /// This has the repository passed as a parameter because it can be any of
+        /// the Artist, Genre or Playlist repositories.  The calling method cast
+        /// the specific repository to an instance of the GroupRepository which has
+        /// the necessary functionality to support getting the information for any 
+        /// of the group types.  
+        /// </remarks>
         private async Task<List<GroupModel>> LoadGroupsAsync<T>(IEnumerable<T> groups, GroupTypeEnum groupType, IGroupRepository<T> repository) where T : Core.Model.Group
         {
             //var artists = await _artistRepository.GetAllArtists() as List<Artist>;

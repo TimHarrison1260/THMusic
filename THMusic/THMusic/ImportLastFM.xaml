@@ -78,7 +78,7 @@
                 because this is needed and the same format makes sense on the Import
                 page for MP3 and LastFM 
             -->
-            <uc:AlbumAndTrackView x:Name="itemDetailGrid" Margin="0,60,0,50" />
+            <uc:AlbumAndTrackViewer x:Name="itemDetailGrip" Margin="0,60,0,50" />
         </ScrollViewer>
 
         <VisualStateManager.VisualStateGroups>

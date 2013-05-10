@@ -51,6 +51,13 @@ namespace Core.Interfaces
         Task<Album> CreateAlbum(Album newAlbum);
 
         /// <summary>
+        /// Add a new track to an existing album in the In-Memory context, updating the related 
+        /// entities and ensuring the navigation properties are correctly updated.
+        /// </summary>
+        /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
+        Task AddTrackToAlbum(Album UpdatedAlbum);
+
+        /// <summary>
         /// Gets or sets the reference to the storage file while the context is alive.
         /// </summary>
         StorageFile PersistenceFile { get; set; }

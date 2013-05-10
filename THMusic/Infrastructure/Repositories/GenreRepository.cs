@@ -81,8 +81,9 @@ namespace Infrastructure.Repositories
             var image = _unitOrWork.Genres
                 .Where(g => g.Id == Id)
                 .SelectMany(a => a.Albums)
+                .Where(a => a.Images.Count() > 0)
                 .SelectMany(a => a.Images)
-                .Where(i => i.Size == ImageSizeEnum.Large)
+                .Where(i => i.Size == ImageSizeEnum.large)
                 .First();
             return image.Url;
         }

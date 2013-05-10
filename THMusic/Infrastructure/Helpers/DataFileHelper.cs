@@ -1,5 +1,5 @@
 ﻿//***************************************************************************************************
-//Name of File:     SearchesFileHelper.cs
+//Name of File:     DataFileHelper.cs
 //Description:      Gets the file for the MusicCatalogue
 //                  NB:  This is based on code from one of my previous courseworks.  
 //                          This is code reuse, without re-inventing the wheel.

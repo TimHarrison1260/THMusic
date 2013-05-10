@@ -13,8 +13,9 @@ using THMusic.DataModel;
 namespace THMusic.Data
 {
     /// <summary>
-    /// This <c>LastFMModelHelper</c> class is responsible for managing all
-    /// access to LastFMService, and mapping the results to the
+    /// This <c>ILastFMModelDataService</c> interface describes the functionality
+    /// of the <see cref="THMusic.Data.LastFMModelDataService"/>, which is responsible 
+    /// for managing all access to LastFMService, and mapping the results to the
     /// AlbumModel of the Ui, which supports the LastFMViewModel as well as
     /// the AlbumsViewModel.  
     /// The LastFMViewModel is part of the MVVM pattern implemented within
@@ -23,17 +24,18 @@ namespace THMusic.Data
     public interface ILastFMModelDataService
     {
         /// <summary>
-        /// Helper method to load the GroupModel that supports the MainViewModel
-        /// with the corresponding group category.
+        /// Gets the album information from the LastFM album.getInfo service
         /// </summary>
-        /// <returns></returns>
+        /// <param name="ArtistName">The Artist to search for</param>
+        /// <param name="AlbumName">The Album to search for</param>
+        /// <returns>The Album information as an AlbumModel class.</returns>
         Task<AlbumModel> GetLastFMAlbumInfoAsync(string ArtistName, string AlbumName);
 
         /// <summary>
-        /// Helper method to create the LastFMalbum as an album in the domain.
+        /// Adds the Album to the Domain Model.
         /// </summary>
-        /// <param name="lastFMAlbum">the album to create</param>
-        /// <returns>The new album</returns>
+        /// <param name="lastFMAlbum">The album to be added</param>
+        /// <returns>A success or failure indicator</returns>
         Task<string> ImportAlbumAsync(AlbumModel lastFMAlbum);
     }
 }
