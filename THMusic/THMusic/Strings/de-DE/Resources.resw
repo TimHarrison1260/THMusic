@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppName" xml:space="preserve">
+    <value>THMusic: Musiksammlung</value>
+    <comment>Used in the title for each page.</comment>
+  </data>
+  <data name="ArtistGroupingRadioButton.Content" xml:space="preserve">
+    <value>Künstler</value>
+    <comment>Description of radio button on Main Page, Top Appbar</comment>
+  </data>
+  <data name="GenreGroupingRadioButton.Content" xml:space="preserve">
+    <value>Genre</value>
+    <comment>Description of radio button on Main Page, Top Appbar</comment>
+  </data>
+  <data name="GroupCount" xml:space="preserve">
+    <value>albums</value>
+    <comment>Used in code, to give the Group totals string for display on the Group view</comment>
+  </data>
+  <data name="GroupDurationHours" xml:space="preserve">
+    <value>stunden</value>
+    <comment>Used in code, to give the Group totals string for display on the Group view</comment>
+  </data>
+  <data name="GroupDurationMins" xml:space="preserve">
+    <value>minuten</value>
+    <comment>Used in code, to give the Group totals string for display on the Group view</comment>
+  </data>
+  <data name="GroupingRadioButtonsTitle.Text" xml:space="preserve">
+    <value>zeigen Sie alben vorbei</value>
+    <comment>The title next to the Grouping Radio Buttons, Main Page, Top Appbar</comment>
+  </data>
+  <data name="GroupPlaylistCount" xml:space="preserve">
+    <value>tracks</value>
+    <comment>Used for group totlas specifically the Playlist totalks as it works with tracks</comment>
+  </data>
+  <data name="ImportLastFMButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Suche LastFM</value>
+  </data>
+  <data name="ImportMP3Button.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Suche MP3</value>
+  </data>
+  <data name="LastFMClearButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Suche löschen</value>
+  </data>
+  <data name="LastFMImportButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Import Album</value>
+  </data>
+  <data name="LastFMSearchButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Suche LastFM</value>
+  </data>
+  <data name="PlaylistGroupingRadioButton.Content" xml:space="preserve">
+    <value>meine Playlist</value>
+    <comment>Description of radio button on Main Page, Top Appbar</comment>
+  </data>
+  <data name="RefreshGroupingButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>erneuen sie album</value>
+    <comment>The "Refresh" button which is used to refresh the data when the album grouping selection has been changed, Main page, Top Appbar</comment>
+  </data>
+  <data name="SearchAlbumLabel.Text" xml:space="preserve">
+    <value>tragen sie den Name des albums ein</value>
+    <comment>User instruction on hwat album to enter for the search criteria</comment>
+  </data>
+  <data name="SearchArtistLabel.Text" xml:space="preserve">
+    <value>melden Se den Künstler an</value>
+    <comment>User instructions on what to enter for the search criteria</comment>
+  </data>
+  <data name="SearchButtonText.Content" xml:space="preserve">
+    <value>Suche LastFM</value>
+    <comment>Text on the search button.  Instruct the user to click and start the search on LastFM</comment>
+  </data>
+  <data name="SearchLastFMTitle.Text" xml:space="preserve">
+    <value>Suche LastFM nach einem Album</value>
+    <comment>The title of the search page for Last FM</comment>
+  </data>
+  <data name="GroupTypeEnumArtist" xml:space="preserve">
+    <value>Künstler</value>
+    <comment>A localised string representing the enumeration GroupTypeEnum</comment>
+  </data>
+  <data name="GroupTypeEnumGenre" xml:space="preserve">
+    <value>Genres</value>
+    <comment>A localised string representing the enumeration GroupTypeEnum</comment>
+  </data>
+  <data name="GroupTypeEnumPlaylist" xml:space="preserve">
+    <value>Playlists</value>
+    <comment>A localised string representing the enumeration GroupTypeEnum</comment>
+  </data>
+  <data name="TrackPlayButton.Content" xml:space="preserve">
+    <value>Spielen</value>
+    <comment>This shows against a track that can be played, as the media file is specified</comment>
+  </data>
+  <data name="PlayerForwardButton.Content" xml:space="preserve">
+    <value>vorn</value>
+    <comment>The Fast Forward button on the AudioPlay User control</comment>
+  </data>
+  <data name="PlayerPauseButton.Content" xml:space="preserve">
+    <value>Pause</value>
+    <comment>The Pause button on the AudioPlayer User control</comment>
+  </data>
+  <data name="PlayerPlayButton.Content" xml:space="preserve">
+    <value>Spielen</value>
+    <comment>The play button on the AudioPlayer User control</comment>
+  </data>
+  <data name="PlayerRewindButton.Content" xml:space="preserve">
+    <value>Spielen</value>
+    <comment>The Rewind button on the AudioPlayer User control</comment>
+  </data>
+  <data name="PlayerStopButton.Content" xml:space="preserve">
+    <value>Stopp</value>
+    <comment>The Stop button on the AudioPlayer User control</comment>
+  </data>
+</root>

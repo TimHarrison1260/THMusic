@@ -10,6 +10,9 @@
 
 namespace Core.Model.ConcreteClasses
 {
+    /// <summary>
+    /// Concrete representation of the abstract <see cref="Core.Model.Image"/> class.
+    /// </summary>
     public class ConcreteImage : Image
     {
     }

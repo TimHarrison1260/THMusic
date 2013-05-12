@@ -16,10 +16,16 @@ using System.Threading.Tasks;
 
 namespace THMusic.Design
 {
+    /// <summary>
+    /// This <c>DesignArtistRepository</c> sources the design time data for the main page
+    /// </summary>
     public class DesignArtistRepository : Core.Interfaces.IArtistRepository
     {
         private List<Core.Model.Artist> _artists = new List<Core.Model.Artist>();
 
+        /// <summary>
+        /// ctor:
+        /// </summary>
         public DesignArtistRepository()
         {
             _artists = new List<Core.Model.Artist>() 
@@ -45,12 +51,20 @@ namespace THMusic.Design
             };
         }
 
-
+        /// <summary>
+        /// Get both design time artist
+        /// </summary>
+        /// <returns>The artists</returns>
         public async Task<IEnumerable<Core.Model.Artist>> GetAll()
         {
             return _artists;
         }
 
+        /// <summary>
+        /// Get the image for either artist
+        /// </summary>
+        /// <param name="Id">the artist Id</param>
+        /// <returns>the image url</returns>
         public async Task<string> GetFirstAlbumImage(int Id)
         {
             if (Id == 1)
@@ -59,6 +73,11 @@ namespace THMusic.Design
                 return @"Assets\DamnationLarge.png";
         }
 
+        /// <summary>
+        /// Get the number of albums for the artist
+        /// </summary>
+        /// <param name="Id">the id of the artist</param>
+        /// <returns>the number of albums</returns>
         public async Task<int> GetAlbums(int Id)
         {
             if (Id == 1)
@@ -67,6 +86,11 @@ namespace THMusic.Design
                 return 1;
         }
 
+        /// <summary>
+        /// Gets the number of tracks for the artist
+        /// </summary>
+        /// <param name="Id">The artist id</param>
+        /// <returns>The number of tracks</returns>
         public async Task<int> GetTracks(int Id)
         {
             if (Id == 1)
@@ -75,6 +99,11 @@ namespace THMusic.Design
                 return 8;
         }
 
+        /// <summary>
+        /// Gets the duration of the albums for the artist
+        /// </summary>
+        /// <param name="Id">the artist id</param>
+        /// <returns>the total duration</returns>
         public async Task<TimeSpan> GetDuration(int Id)
         {
             if (Id == 1)
@@ -83,11 +112,21 @@ namespace THMusic.Design
                 return new TimeSpan(0, 42, 51);
         }
 
+        /// <summary>
+        /// Not mplemented
+        /// </summary>
+        /// <param name="Id">the id</param>
+        /// <returns>Task</returns>
         public async Task<Core.Model.Artist> GetById(int Id)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Not implemented
+        /// </summary>
+        /// <param name="Name">name</param>
+        /// <returns>Task</returns>
         public async Task<Core.Model.Artist> GetByName(string Name)
         {
             throw new NotImplementedException();

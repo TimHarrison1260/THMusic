@@ -50,10 +50,16 @@ namespace THMusic.Data
         private AbstractFactory<Wiki> _wikiFactory;
 
         /// <summary>
-        /// ctor: Accepts the injected instance of the dependencies
+        /// ctor;
         /// </summary>
-        /// <param name="AlbumRepository">The injected AlbumRepository instance</param>
-        /// <param name="LastFMService">The injected LastFMService instance</param>
+        /// <param name="AlbumRepository">Instance of the AlbumRepository</param>
+        /// <param name="AlbumFactory">Instance of the AlbumFactory</param>
+        /// <param name="ImageFactory">Instance of the ImageFactore</param>
+        /// <param name="TrackFactory">Instance of the TrackFactory</param>
+        /// <param name="ArtistFactory">Instance of the ArtistFactory</param>
+        /// <param name="GenreFactory">Instance of thenGenreFactory</param>
+        /// <param name="WikiFactory">Instance of the WikiFactory</param>
+        /// <param name="LastFMService">Instance of the LastFMService</param>
         public LastFMModelDataService(IAlbumRepository AlbumRepository, 
             AbstractFactory<Album> AlbumFactory, 
             AbstractFactory<Image> ImageFactory,

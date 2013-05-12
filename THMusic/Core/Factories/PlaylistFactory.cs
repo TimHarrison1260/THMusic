@@ -14,8 +14,18 @@ using Core.Model.ConcreteClasses;
 
 namespace Core.Factories
 {
+    /// <summary>
+    /// This <c>PlaylistFactory</c> is the factory class used to 
+    /// generate instances of the <see cref="Core.Model.Playlist"/> class.
+    /// It derives from the base <see cref="Core.Factories.AbstractFactory"/>
+    /// class specifying the type of <c>Playlist</c>.
+    /// </summary>
     public class PlaylistFactory : AbstractFactory<PlayList>
     {
+        /// <summary>
+        /// Create the concrete implementation of the abstract Playlist class
+        /// </summary>
+        /// <returns>New instance of ConcretePlaylist</returns>
         public override PlayList Create()
         {
             var newPlaylist = new ConcretePlaylist()

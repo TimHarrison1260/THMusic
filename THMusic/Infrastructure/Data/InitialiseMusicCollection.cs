@@ -209,6 +209,7 @@ namespace Infrastructure.Data
             dsotmTrack2.Playlists = new List<PlayList>();
             dsotmTrack2.AlbumId = DarkSideOfTheMoon.Id;
 
+
             var dsotmTrack3 = TrackFactory.Create();
             //var dsotmTrack3 = new Track();
             dsotmTrack3.Id = 3;
@@ -422,15 +423,15 @@ namespace Infrastructure.Data
             //var dsotmImageMedium = new Image();
             dsotmImageMedium.Id = 2;
             dsotmImageMedium.Size = ImageSizeEnum.medium;
-            dsotmImageMedium.Url = @"http://userserve-ak.last.fm/serve/64s/69704236.png";
-            //dsotmImageMedium.Url = @"DarkSideOfTheMoonMedium.png";
+            //dsotmImageMedium.Url = @"http://userserve-ak.last.fm/serve/64s/69704236.png";
+            dsotmImageMedium.Url = @"Assets\DarkSideOfTheMoonMedium.png";
 
             var dsotmImageLarge = ImageFactory.Create();
             //var dsotmImageLarge = new Image();
             dsotmImageLarge.Id = 3;
             dsotmImageLarge.Size = ImageSizeEnum.large;
-            dsotmImageLarge.Url = @"http://userserve-ak.last.fm/serve/174s/69704236.png";
-            //dsotmImageLarge.Url = @"DarkSideOfTheMoonLarge.png";
+            //dsotmImageLarge.Url = @"http://userserve-ak.last.fm/serve/174s/69704236.png";
+            dsotmImageLarge.Url = @"Assets\DarkSideOfTheMoonLarge.png";
 
             var dsotmImageExtraLarge = ImageFactory.Create();
             //var dsotmImageExtraLarge = new Image();
@@ -482,13 +483,16 @@ namespace Infrastructure.Data
             //var damImageMedium = new Image();
             wywhImageMedium.Id = 11;
             wywhImageMedium.Size = ImageSizeEnum.medium;
-            wywhImageMedium.Url = @"http://userserve-ak.last.fm/serve/64s/40625357.png";
+            //wywhImageMedium.Url = @"http://userserve-ak.last.fm/serve/64s/40625357.png";
+            wywhImageMedium.Url = @"Assets\wywhMedium.png";
+
 
             var wywhImageLarge = ImageFactory.Create();
             //var damImageLarge = new Image();
             wywhImageLarge.Id = 12;
             wywhImageLarge.Size = ImageSizeEnum.large;
-            wywhImageLarge.Url = @"http://userserve-ak.last.fm/serve/174s/40625357.png";
+            //wywhImageLarge.Url = @"http://userserve-ak.last.fm/serve/174s/40625357.png";
+            wywhImageLarge.Url = @"Assets\wywhLarge.png";
 
 
 

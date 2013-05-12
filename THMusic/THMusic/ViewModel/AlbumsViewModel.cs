@@ -24,7 +24,7 @@ using THMusic.Data;
 namespace THMusic.ViewModel
 {
     /// <summary>
-    /// This <c>AlcumsViewModel</c> is responsible for managing access to the information required
+    /// This <c>AlbumsViewModel</c> is responsible for managing access to the information required
     /// by the Albums List / Detail page.  It is accessed from the Group List view, which shows
     /// Totals for each Group defined.
     /// <para>
@@ -53,8 +53,7 @@ namespace THMusic.ViewModel
         /// <summary>
         /// ctor: Initialised a new instance of the AlbumViewModel class
         /// </summary>
-        /// <param name="ArtistRepository">A reference to the ArtistRepository, injected at runtime</param>
-        /// <param name="LastFMService">A reference to the LastFMService, injected at runtime.</param>
+        /// <param name="AlbumModelDataService">A reference to the ArtistRepository, injected at runtime</param>
         /// <remarks>
         /// This follows the example supplied by the MVVMLight framework with modifications to use
         /// constructor injection via the SimpleIoC container.
@@ -69,11 +68,7 @@ namespace THMusic.ViewModel
             if (IsInDesignMode)
             {
                 // Code runs in Blend --> create design time data.
-                int Id = 1;
-                LoadViewModelAsync(Id, GroupTypeEnum.Artist);
-                
-                //this.Albums = Helpers.AlbumModelHelper.LoadAlbumsAsync(Id, "Artist", _albumRepository);
-                //this.CurrentAlbum = Albums[0];
+                LoadDesignViewModel();
             }
             else
             {
@@ -90,6 +85,9 @@ namespace THMusic.ViewModel
 
         //  Holds the id of the group, which includes the groups type
         private GroupId _uniqueId;
+        /// <summary>
+        /// Gets or sets the UniqueId of the Group being displayed
+        /// </summary>
         public GroupId UniqueId
         {
             get { return _uniqueId; }
@@ -109,6 +107,9 @@ namespace THMusic.ViewModel
 
         //  Holds the name of the selected group, passed from the MainViewModel
         private string _groupName;
+        /// <summary>
+        /// Gets or sets the name of the group being displayed
+        /// </summary>
         public string GroupName
         {
             get { return _groupName; }
@@ -124,6 +125,9 @@ namespace THMusic.ViewModel
 
         //  Holds the list of albums belonging to the selected Group.
         private List<AlbumModel> _albums;
+        /// <summary>
+        /// Gets or sets the collection of album models being displayed
+        /// </summary>
         public List<AlbumModel> Albums
         {
             get { return _albums; }
@@ -139,6 +143,9 @@ namespace THMusic.ViewModel
 
         //  Holds the details of the currently selected Album
         private AlbumModel _currentAlbum;
+        /// <summary>
+        /// Gets or sets the currently selected album (via the UI)
+        /// </summary>
         public AlbumModel CurrentAlbum
         {
             get { return _currentAlbum; }
@@ -177,6 +184,16 @@ namespace THMusic.ViewModel
             //  Load the Group Name
             this.GroupName = await _dataService.LoadGroupNameAsync(Id, groupType);
             //            this.GroupName = await Helpers.AlbumModelHelper.LoadGroupNameAsync(Id, groupType, _artistRepository);
+        }
+
+        /// <summary>
+        /// Load the design time data for the xaml editor.
+        /// </summary>
+        private async void LoadDesignViewModel()
+        {
+            this.Albums = await _dataService.LoadAlbumsAsync(1, GroupTypeEnum.Artist);
+//            this.CurrentAlbum = Albums[0];
+            this.GroupName = await _dataService.LoadGroupNameAsync(1, GroupTypeEnum.Artist);
         }
     }
 

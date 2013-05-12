@@ -67,6 +67,9 @@ namespace Core.Model
         /// </remarks>
         [XmlIgnore()]
         public List<Album> Albums { get; set; }
+        /// <summary>
+        /// Gets or sets the collecitno of albumIds corresponding to the collection of Albums
+        /// </summary>
         public List<int> AlbumIds { get; set; }
         //  TODO: include logic to ensure update is successful to both properties setting only one of them.
     }

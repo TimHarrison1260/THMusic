@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Infrastructure.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -106,8 +107,10 @@
     <Compile Include="Data\DataHelper.cs" />
     <Compile Include="Data\MusicCollection.cs" />
     <Compile Include="Data\NamespaceDoc.cs" />
-    <Compile Include="Design\DesignMusicCollection.cs" />
     <Compile Include="Data\InitialiseMusicCollection.cs" />
+    <Compile Include="Design\DesignMusicCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Helpers\DataFileHelper.cs" />
     <Compile Include="Helpers\SerialiseHelper.cs" />
     <Compile Include="Helpers\FileIOHelper.cs" />
@@ -125,6 +128,7 @@
     <Compile Include="Repositories\GenreRepository.cs" />
     <Compile Include="Repositories\PersistenceRepository.cs" />
     <Compile Include="Services\LastFmProxy.cs" />
+    <Compile Include="Services\NamespaceDoc.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

@@ -14,8 +14,18 @@ using Core.Model.ConcreteClasses;
 
 namespace Core.Factories
 {
+    /// <summary>
+    /// This <c>GenreFactory</c> is the factory class used to 
+    /// generate instances of the <see cref="Core.Model.Genre"/> class.
+    /// It derives from the base <see cref="Core.Factories.AbstractFactory"/>
+    /// class specifying the type of <c>Genre</c>.
+    /// </summary>
     public class GenreFactory : AbstractFactory<Genre>
     {
+        /// <summary>
+        /// Create the concrete implementation of the abstract Genre class
+        /// </summary>
+        /// <returns>New instance of ConcreteGenre</returns>
         public override Genre Create()
         {
             var newGenre = new ConcreteGenre()

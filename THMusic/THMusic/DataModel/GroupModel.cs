@@ -146,9 +146,18 @@ namespace THMusic.DataModel
     /// </summary>
     public class GroupId
     {
+        /// <summary>
+        /// Gets or sets the type of the Group, Artist, Genre or Playlist
+        /// </summary>
         public GroupTypeEnum Type { get; set; }
+        /// <summary>
+        /// Gets or sets the Id of the Group
+        /// </summary>
         public int Id { get; set; }
-
+        /// <summary>
+        /// Gets the string representation of the Groupid
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("{0}{1)", this.Type, this.Id.ToString());

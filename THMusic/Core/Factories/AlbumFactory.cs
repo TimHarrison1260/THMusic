@@ -15,11 +15,22 @@ using Core.Model.ConcreteClasses;
 
 namespace Core.Factories
 {
+    /// <summary>
+    /// This <c>AlbumFactory</c> is the factory class used to 
+    /// generate instances of the <see cref="Core.Model.Album"/> class.
+    /// It derives from the base <see cref="Core.Factories.AbstractFactory"/>
+    /// class specifying the type of <c>Album</c>.
+    /// </summary>    
     public class AlbumFactory : AbstractFactory<Album>
     {
         private readonly AbstractFactory<Artist> _artistFactory;
         private readonly AbstractFactory<Wiki> _wikiFactory;
 
+        /// <summary>
+        /// Constructor for the AlbumFactory
+        /// </summary>
+        /// <param name="ArtistFactory">Instance of the ArtistFactory</param>
+        /// <param name="WikiFactory">Instance of the WikiFactory</param>
         public AlbumFactory(AbstractFactory<Artist> ArtistFactory, AbstractFactory<Wiki> WikiFactory)
         {
             if (ArtistFactory == null)

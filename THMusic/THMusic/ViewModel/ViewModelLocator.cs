@@ -1,7 +1,7 @@
 //***************************************************************************************************
 //Name of File:     ViewModelLocator.cs
 //Description:      The viewModelLocator is responsible for initialising the IoC and viewModels
-//                  The template is supplied by GalaSoft/MVVMLught.
+//                  The template is supplied by GalaSoft/MVVMLught but modified to suit.
 //Author:           Tim Harrison
 //Date of Creation: Apr/May 2013.
 //
@@ -51,11 +51,11 @@ namespace THMusic.ViewModel
             {
                 // Create design time view services and models
                 SimpleIoc.Default.Register<Core.Interfaces.IArtistRepository, Design.DesignArtistRepository>();
-
-                //SimpleIoc.Default.Register<Core.Interfaces.IGenreRepository, Design.DesignGenrerepository>();
-
+                SimpleIoc.Default.Register<Data.IMusicFileDataService, Design.DesignMusicFileDataService>();
                 SimpleIoc.Default.Register<Data.IGroupModelDataService, Design.DesignGroupModelDataService>();
-                //IoC.Configuration.ResisterDesignDataSource(SimpleIoc.Default);
+                SimpleIoc.Default.Register<Data.IAlbumModelDataService, Design.DesignAlbumModelDataService>();
+
+                //SimpleIoc.Default.Register<Data.ILastFMModelDataService, Design.DesignLastFMModelDataService>();
             }
             else
             {
@@ -63,7 +63,6 @@ namespace THMusic.ViewModel
                 IoC.Configuration.RegisterServices(SimpleIoc.Default);
                 
                 // Create run time view services and models
-                //SimpleIoc.Default.Register<IDataService, DataService>();
                 IoC.Configuration.RegisterDataSource(SimpleIoc.Default);
 
                 //  Group model data service for main page (ItemPage)
@@ -71,7 +70,6 @@ namespace THMusic.ViewModel
                 SimpleIoc.Default.Register<IAlbumModelDataService, AlbumModelDataService>();
                 SimpleIoc.Default.Register<ILastFMModelDataService, LastFMModelDataService>();
                 SimpleIoc.Default.Register<IMusicFileDataService, MusicFileDataService>();
-
             }
 
             //  Navigation service
@@ -82,9 +80,8 @@ namespace THMusic.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();        // registers a concrete implementation
             //  AlbumsViewModel, used on the Albums page: (SplitPage.xaml)
             SimpleIoc.Default.Register<AlbumsViewModel>();
-            //  LastFMViewModel, used for importing album information from LastFM.
+            //  LastFMViewModel, used on the Last FM page: (ImportLastFM.xaml)
             SimpleIoc.Default.Register<LastFMViewModel>();
-
         }
 
         /// <summary>

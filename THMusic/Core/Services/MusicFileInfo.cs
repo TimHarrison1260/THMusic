@@ -45,21 +45,51 @@ namespace Core.Services
         }
 
         //  Track information
+        /// <summary>
+        /// Gets or sets the Track Name
+        /// </summary>
         public string TrackName { get; set; }           //  tag.Title
+        /// <summary>
+        /// Gets or sets the Track number
+        /// </summary>
         public int TrackNumber { get; set; }            //  tag.Track
+        /// <summary>
+        /// Gets or sets the Track Duration
+        /// </summary>
         public TimeSpan TrackDuration { get; set; }     //  duration => timespan
+        /// <summary>
+        /// Gets or sets the MusicBrainzId of the Track
+        /// </summary>
         public string TrackMbid { get; set; }           //  tag.MusicBrainzTrackid
 
         //  Related Artist Information
+        /// <summary>
+        /// Gets opr sets the Artist Name
+        /// </summary>
         public string ArtistName { get; set; }          //  Artists[0], or FirstAlbumArtist
+        /// <summary>
+        /// Gets or sets the MusicBrainzId of the Artist
+        /// </summary>
         public string ArtistMbid { get; set; }          //  tag.MusicBrainzArtistId
         
         //  Related Genres
+        /// <summary>
+        /// Gets or sets the collecction of Genres
+        /// </summary>
         public IList<string> Genres { get; set; }       //  tag.Genres, or tag.FirstGenre
 
         //  Related Album information
+        /// <summary>
+        /// Gets or sets the Album title
+        /// </summary>
         public string AlbumTitle { get; set; }          //  tag.Album
+        /// <summary>
+        /// Gets or Sets the Album Release Date
+        /// </summary>
         public DateTime AlbumReleased { get; set; }     //  tag.Released => Year only
+        /// <summary>
+        /// Gets or sets the Album Id
+        /// </summary>
         public string AlbumMbid { get; set; }           //  tag.MusicBrainzDiscId
 
     }

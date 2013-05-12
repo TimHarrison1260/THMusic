@@ -13,8 +13,18 @@ using Core.Model.ConcreteClasses;
 
 namespace Core.Factories
 {
+    /// <summary>
+    /// This <c>ImageFactory</c> is the factory class used to 
+    /// generate instances of the <see cref="Core.Model.Image"/> class.
+    /// It derives from the base <see cref="Core.Factories.AbstractFactory"/>
+    /// class specifying the type of <c>Album</c>.
+    /// </summary>    
     public class ImageFactory : AbstractFactory<Image>
     {
+        /// <summary>
+        /// Create the concrete implementation of the abstract Image class
+        /// </summary>
+        /// <returns>New instance of ConcreteImage</returns>
         public override Image Create()
         {
             var newImage = new ConcreteImage()

@@ -10,8 +10,20 @@
 
 namespace Core.Factories
 {
+    /// <summary>
+    /// This <c>AbstractFactory</c> class is the abstract base
+    /// class for the Factiroes used to create instance
+    /// of the abstract classes
+    /// </summary>
+    /// <typeparam name="T">The type of class the derived factory creates</typeparam>    
     public abstract class AbstractFactory<T> where T: class
     {
+        /// <summary>
+        /// The Create methods, which creates a instance of the
+        /// class determined by the type T.
+        /// </summary>
+        /// <typeparam name="T">The type of class the derived factory creates</typeparam>    
+        /// <returns>The instantiated class</returns>
         public abstract T Create();
     }
 }

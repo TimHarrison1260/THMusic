@@ -8,6 +8,7 @@
     xmlns:common="using:THMusic.Common"
     xmlns:ignore="http://www.ignore.com"
     xmlns:uc="using:THMusic.CustomControls"
+    xmlns:local="using:THMusic.CustomControls"
     mc:Ignorable="d ignore"
     DataContext="{Binding Albums, Source={StaticResource Locator}}">
 
@@ -62,7 +63,7 @@
             Padding="120,0,0,60"
             IsSwipeEnabled="False">
             <ListView.ItemTemplate>
-                <StaticResource ResourceKey="Album130ItemTemplate"/>
+                    <StaticResource ResourceKey="Album130ItemTemplate"/>
             </ListView.ItemTemplate>
         </ListView>
 
@@ -96,7 +97,7 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="420"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemListView" Storyboard.TargetProperty="ItemTemplate">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Standard80ItemTemplate}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Album80ItemTemplate}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemDetail" Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="60,0,66,0"/>

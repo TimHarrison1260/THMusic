@@ -11,9 +11,23 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
+    /// <summary>
+    /// This <c>IPersistenceRepository</c> interface describes the contract
+    /// for the <see cref="Infrastructure.Repositories.PersistenceRepository"/>.
+    /// </summary>
     public interface IPersistenceRepository
     {
+        /// <summary>
+        /// Retrieves the data from the underlying file, in an asynchronous way, 
+        /// rebuilds the navigation properties and loads the related collections.
+        /// If no data is actually loaded, then it initialises with some static data.
+        /// </summary>
+        /// <returns>A Task so that it can be 'awaited'.</returns>
         Task LoadAsync();
+        /// <summary>
+        /// Persists the data in the underlying file, in an asynchronous way.
+        /// </summary>
+        /// <returns>A Task so that it can be 'awaited'.</returns>
         Task SaveAsync();
     }
 }

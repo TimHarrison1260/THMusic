@@ -25,7 +25,7 @@ namespace Infrastructure.Services
         /// <summary>
         /// Deserialises the XML response from the LastFM HTTP Request
         /// </summary>
-        /// <param name="resultElement">The XML returned from the LastFM call</param>
+        /// <param name="result">The XML returned from the LastFM call</param>
         /// <returns>Deserialised to an instance of LastFMAlbumInfo</returns>
         public static LastFMAlbumInfo Deserialise(XElement result)
         {

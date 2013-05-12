@@ -15,17 +15,21 @@ using Core.Model;
 
 namespace Core.Interfaces
 {
+    /// <summary>
+    /// This <c>IAlbumRepository</c> interface describes the contract
+    /// for the AlbumRepository
+    /// </summary>
     public interface IAlbumRepository
     {
         /// <summary>
         /// Get all albums in the collection
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns the complete colledtion of Albums</returns>
         Task<IEnumerable<Album>> GetAllAlbums();
         /// <summary>
         /// Gets the albums for an Artist
         /// </summary>
-        /// <param name="ArtistId">The Idof the Artist</param>
+        /// <param name="ArtistId">The Id of the Artist</param>
         /// <returns>A collection of Albums</returns>
         Task<IEnumerable<Album>> GetAlbumsForArtist(int ArtistId);
         /// <summary>
@@ -61,10 +65,12 @@ namespace Core.Interfaces
         /// <param name="AlbumName">album Name</param>
         /// <returns>Returns the Album if it exists, otherwise it returns NULL</returns>
         Task<Album> IsAlbumAlreadyImported(string ArtistName, string AlbumName);
+
         /// <summary>
         /// Add a new track to an existing album.
         /// </summary>
-        /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
-        Task AddTrackToAlbum(Album entity);
+        /// <param name="Entity">The new track, encapsulated within an album</param>
+        /// <returns>An instance of Task</returns>
+        Task AddTrackToAlbum(Album Entity);
     }
 }

@@ -18,6 +18,10 @@ using Core.Model;
 
 namespace Core.Interfaces
 {
+    /// <summary>
+    /// This <c>IArtistRepository</c> interface describes the contract
+    /// for the <see cref="Infrastructure.Repositories.ArtistRepository"/>.
+    /// </summary>
     public interface IArtistRepository : IGroupRepository<Artist>
     {
     }

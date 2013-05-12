@@ -27,7 +27,15 @@ namespace THMusic.Data
     /// </summary>
     public interface IMusicFileDataService
     {
-
+        /// <summary>
+        /// Takes the selected audio files and processed them by retrieving the 
+        /// metadata describing the track,  It calls the LastFMService to retrieve
+        /// the image information and then calls the AlbumRepository to add the
+        /// track to the album
+        /// </summary>
+        /// <param name="MusicFiles">The collection of audio files</param>
+        /// <param name="Grouping">The grouping type currently showing on the main page</param>
+        /// <returns>A list containing the id of the groups affected by the addition of the tracks</returns>
         Task<List<int>> ProcessMusicFiles(IReadOnlyList<StorageFile> MusicFiles, GroupTypeEnum Grouping);
 
         /// <summary>

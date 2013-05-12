@@ -43,11 +43,17 @@ namespace Infrastructure.Repositories
         private readonly AbstractFactory<PlayList> _playlistFactory;
         private readonly AbstractFactory<Wiki> _wikiFactory;
 
-
         /// <summary>
         /// ctor: accepts the injected instance of the in-memory context
         /// </summary>
         /// <param name="UnitOfWork">The instance of the context</param>
+        /// <param name="ArtistFactory">Instance of the ArtistFactory</param>
+        /// <param name="AlbumFactory">Instance of the albumFactory</param>
+        /// <param name="TrackFactory">Instance of the TrackFactory</param>
+        /// <param name="ImageFactory">Instance of the ImageFactory</param>
+        /// <param name="GenreFactory">Instance of the GenreFactory</param>
+        /// <param name="PlaylistFactory">Instance of the PlaylistFactory</param>
+        /// <param name="WikiFactory">Instance of the WikiFactory</param>
         public PersistenceRepository(IUnitOfWork UnitOfWork,
             AbstractFactory<Artist> ArtistFactory,
             AbstractFactory<Album> AlbumFactory,
@@ -93,6 +99,7 @@ namespace Infrastructure.Repositories
         /// rebuilds the navigation properties and loads the related collections.
         /// If no data is actually loaded, then it initialises with some static data.
         /// </summary>
+        /// <returns>An instance of Task, so the method is awaitable</returns>
         public async Task LoadAsync()
         {
             //  Get the XML file if it exists.
@@ -126,7 +133,7 @@ namespace Infrastructure.Repositories
         /// <summary>
         /// Persists the data in the underlying file, in an asynchronous way.
         /// </summary>
-        /// <returns>A Task so that it can be 'awaited'.</returns>
+        /// <returns>An instance of Task, so the method is awaitable</returns>
         public async Task SaveAsync()
         {
             //  get the handle to the XML data file.

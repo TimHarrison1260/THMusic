@@ -16,6 +16,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace THMusic.CustomControls
 {
+    /// <summary>
+    /// This <c>appBarBottom</c> class is the application AppBar displayed at the 
+    /// bottom of the main page.  It provides access to the LastFM and MP3 import
+    /// facilities
+    /// </summary>
     public sealed partial class AppBarBottom : UserControl
     {
         public AppBarBottom()

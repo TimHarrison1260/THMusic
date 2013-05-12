@@ -1,0 +1,60 @@
+XML Serialisation of the MusicCollection class.
+-----------------------------------------------
+
+First Error: Cannot register: Multiple constructors found in MusicCollection but none marked with PreferredConstructor.
+Cause: This was caused by the introdocution of a parameterless constructor, which is a requirement placed upon a class that is to be serialised using the XMLSerialiser.
+Resolution: was to put the MVVMLugh.ioC  PreferredConstructorAttribute on the constructor taking the dependencies on MusicCollection.
+Warning: This places a dependency on MVVMLight in the Infrastructure project, NOT necessarily a good thing at all.
+
+SecondError: Type not found in cache: Core.Factories.AbstractFactory`1[[Core.Model.Artist, Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]].
+Cause: This is becaus the MucisCollection constructor is the first thing being called and the rest of the dependencies have not yet been resolved by SimpleIoC.
+Resolution: try to alter the sequence in which the dependencies are registered with SimpleIoC.  This sorted the problems of registering the dependencies.
+
+
+Third error: Cannot serialize member Core.Model.Artist.Albums of type System.Collections.Generic.ICollection`1[[Core.Model.Album, Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] because it is an interface.
+Cause; The Albums collection within Artist is ICollection, and XML requires a class, either abstract or concrete to serialise.  Amend the model
+		This was the lowest inner exception of 6 inner exceptions of the eventual exception
+
+Resolution: Will attempt to resolve by definint the collections as Lst<T> instead of ICollection<T> within the model classes.  This cured the exception and, as expected, moved the same error to the next part of the model.
+Continue to remofe all interfaces within the model classes.
+	Album		Tracks
+	Album		Images
+	Album		Genres
+	Genre		Albums
+	PlayList	Tracks
+
+
+Fourth error: The type Core.Model.ConcreteClasses.ConcreteAlbum was not expected. Use the XmlInclude or SoapInclude attribute to specify types that are not known statically.
+Cause: The model classes are abstract and created with Factories, this message shows the XML serialisation is reflecting the types and finding the concrete implementation of these classes.  These classes need to be decorated with the XMLImclude attribute to make them serialisable also.
+Resolution: Mark all concrete classes with the XMLInclude attribute.  This is likely to require these concrete classes to be neede on the Deserialisation of the class in the Load method.
+Added the following to each abstract class that has a concrete implementation
+	Using System.XML.Serialisation;
+	Using Core.Model.ConcreteClasses
+	and at the top of each abstract class
+	[XMLInclude(tyopeof(concreteClassname))]
+
+	Album, Artist, Image, Track and Wiki
+
+
+Fifth Error: A circular reference was detected while serializing an object of type Core.Model.ConcreteClasses.ConcreteAlbum.
+Cause:  Probably the Model, as an Album references a collection of tracks and a track references it's owning album.  An Album also contains a reference to its owning Artist.  The Album also contains a reference to its Images and its Wiki, but there are no back references from these classes.  Perhaps Solve this by holding a reference to the albumId within the track, to facilitate backward navigation but remore the circular reference.  
+
+Attempt 1
+NO: The track also contains a reference to the Artist, and this could be the source of the circular reference.  We should remove the reference to the TrackArtist first to see if this is the circular reference.
+
+	Altered	Track, InitialiseMusicCollection, TrackFactory
+
+Attempt 2
+Alright, remove the reference to the Album from the Track.
+
+	Altered Track, InitialiseMusicCollection, TrackFactory
+
+Attempt 3
+
+	
+	
+CAREFUL HERE, DON'T MAKE TOO MANY CHANGES AS THE MODEL IS SEEDED AND THE SEED DATA WILL ADD THE ENTIRE ALBUM TO THE TRACK.
+
+
+
+

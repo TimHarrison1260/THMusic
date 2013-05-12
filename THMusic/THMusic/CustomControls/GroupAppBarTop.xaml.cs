@@ -16,6 +16,12 @@ using Windows.UI.Xaml.Navigation;
 
 namespace THMusic.CustomControls
 {
+    /// <summary>
+    /// This <c>GroupBarBottom</c> class is the application AppBar displayed at the 
+    /// top of the main page.  it provides functionality to change the groupging 
+    /// selected from Artist, Albums and Playlist.  It also displayes the "Refresh"
+    /// data button, that becomes visible when a change is made to the grouping.
+    /// </summary>
     public sealed partial class GroupAppBarTop : UserControl
     {
         public GroupAppBarTop()

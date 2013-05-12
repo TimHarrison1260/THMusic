@@ -18,6 +18,10 @@ using Core.Model;
 
 namespace Core.Interfaces
 {
+    /// <summary>
+    /// This <c>IGenreRepository</c> interface describes the contract
+    /// for the <see cref="Infrastructure.Repositories.GenreRepository"/>.
+    /// </summary>
     public interface IGenreRepository : IGroupRepository<Genre>
     {
     }

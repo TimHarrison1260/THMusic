@@ -44,7 +44,9 @@ namespace THMusic.Data
         /// <summary>
         /// ctor: Initialise the GroupModelDataService
         /// </summary>
-        /// <param name="AlbumRepository"></param>
+        /// <param name="ArtistRepository">Instance of the ArtistRepository</param>
+        /// <param name="GenreRepository">Instance of the GenreRepository</param>
+        /// <param name="PlaylistRepository">Instance of the PlaylistRepository</param>
         public GroupModelDataService(IArtistRepository ArtistRepository, IGenreRepository GenreRepository, IPlaylistRepository PlaylistRepository)
         {
             if (ArtistRepository == null)
@@ -96,7 +98,12 @@ namespace THMusic.Data
             return groups;
         }
 
-
+        /// <summary>
+        /// Get the Group model for a specific group id
+        /// </summary>
+        /// <param name="Id">The Id of the Group</param>
+        /// <param name="groupType">The type of the group, Artist, Genre or Playlist</param>
+        /// <returns>The populated group model</returns>
         public async Task<GroupModel> LoadGroupAsync(int Id, GroupTypeEnum groupType)
         {
             //  Call the repository 
@@ -174,40 +181,6 @@ namespace THMusic.Data
             }
             return groupModels;
         }
-
-
-        ///// <summary>
-        ///// Design time routine only.  For the minute
-        ///// </summary>
-        ///// <param name="ArtistRepository"></param>
-        ///// <returns></returns>
-        //public async Task<List<GroupModel>> Load(GroupTypeEnum groupType, IArtistRepository ArtistRepository)
-        //{
-        //    //  Call the repository 
-        //    var groups = new List<GroupModel>();
-
-        //    var artists = await ArtistRepository.GetAllArtists() as List<Artist>;
-        //    foreach (var a in artists)
-        //    {
-        //        string image = await ArtistRepository.GetArtistAlbumImage(a.Id);
-
-        //        int totalAlbums = await ArtistRepository.GetArtistAlbums(a.Id);
-        //        int totalTracks = await ArtistRepository.GetArtistTracks(a.Id);
-        //        TimeSpan totalDuration = await ArtistRepository.GetArtistDuration(a.Id);
-        //        string description = LocalisationHelper.LocaliseDescription(totalAlbums, totalDuration);
-
-        //        //  Add to the GroupItems after this.
-        //        var groupmodel = new GroupModel()
-        //        {
-        //            Name = a.Name,
-        //            Description = description
-        //        };
-        //        groupmodel.SetImage(image);
-        //        groups.Add(groupmodel);
-        //    }
-        //    return groups;
-        //}
-
 
     }
 }

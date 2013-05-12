@@ -62,8 +62,8 @@ namespace THMusic.ViewModel
         /// <summary>
         /// ctor: Initialised a new instance of the AlbumViewModel class
         /// </summary>
-        /// <param name="ArtistRepository">A reference to the ArtistRepository, injected at runtime</param>
-        /// <param name="LastFMService">A reference to the LastFMService, injected at runtime.</param>
+        /// <param name="LastFMModelDataService">Instance of the LastFMService</param>
+        /// <param name="NavigationService">Instance of the navigatino service required for this page</param>
         /// <remarks>
         /// This follows the example supplied by the MVVMLight framework with modifications to use
         /// constructor injection via the SimpleIoC container.
@@ -81,7 +81,6 @@ namespace THMusic.ViewModel
             if (IsInDesignMode)
             {
                 // Code runs in Blend --> create design time data.
-                //  TODO: Add Design time data, though not a priority
             }
             else
             {
@@ -100,6 +99,9 @@ namespace THMusic.ViewModel
 
 
         //  ***************************  Commands  ***********************************
+        /// <summary>
+        /// Handles the LAstFMSearchCommend, raised by the Search LastFM button
+        /// </summary>
         public RelayCommand LastFMSearchCommand { get; set; }
         private async void lastFMSearchHandler()
         {
@@ -108,6 +110,9 @@ namespace THMusic.ViewModel
                 await GetLastFMAlbumAsync(this.SearchAlbum, this.SearchArtist);
         }
 
+        /// <summary>
+        /// Handles the LastFMClearSearchCommand, raised  by the Clear Search button
+        /// </summary>
         public RelayCommand LastFMClearSearchCommand { get; set; }
         private void lastFMClearSearchHandler()
         {
@@ -116,6 +121,9 @@ namespace THMusic.ViewModel
             this.LastFMAlbum = new AlbumModel();
         }
 
+        /// <summary>
+        /// Handles the LastFMImportCommand, raised by the Import LastFM button
+        /// </summary>
         public RelayCommand LastFMImportCommand { get; set; }
         private async void lastFMImportHandler()
         {
@@ -200,7 +208,8 @@ namespace THMusic.ViewModel
         /// <remarks>
         /// This call is separated to a private method so the call can be 'await'ed.  To call 
         /// this from the mainViewModel constructor would require it to be decorated as 
-        /// 'async' which is not possible.
+        /// 'async' which is not possible.  There are also issues with doint this that deal
+        /// with the possibility of causing deadlocks.
         /// </remarks>
         private async Task GetLastFMAlbumAsync(string album, string artist)
         {
@@ -208,6 +217,10 @@ namespace THMusic.ViewModel
             this.LastFMAlbum = await _dataService.GetLastFMAlbumInfoAsync(artist, album);
         }
 
-    }
 
+        private async Task LoadDesignData()
+        {
+            this.LastFMAlbum = await _dataService.GetLastFMAlbumInfoAsync("Pink Floyd", "Dark side of the Moon");
+        }
+    }
 }

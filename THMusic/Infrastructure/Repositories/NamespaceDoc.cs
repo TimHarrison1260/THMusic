@@ -2,7 +2,7 @@
 namespace Infrastructure.Repositories
 {
     /// <summary>
-    /// The Namespace <c>Infrastructure.REpositories</c> is responsible for the 
+    /// The Namespace <c>Infrastructure.Repositories</c> is responsible for the 
     /// repositories that control access to the data context (In-Memory) and the
     /// access to the underlying XML file.
     /// </summary>

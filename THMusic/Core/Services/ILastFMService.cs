@@ -12,8 +12,18 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Core.Services
 {
+    /// <summary>
+    /// this <c>ILastFMService</c> interface describes the contract for the 
+    /// <see cref="Infrastructure.Services.LastFMProxy"/>
+    /// </summary>
     public interface ILastFMService
     {
+        /// <summary>
+        /// Gets the album information by calling the LastFM Web Service
+        /// </summary>
+        /// <param name="albumName">The Name of the album to find</param>
+        /// <param name="artistName">The name of the Artist to find</param>
+        /// <returns>An instance of the LastFMAlbumInfo class</returns>
         Task<LastFMAlbumInfo> GetAlbumInfoAsync(string albumName, string artistName);
     }
 }

@@ -261,6 +261,7 @@ namespace Infrastructure.Data
         /// entities and ensuring the navigation properties are correctly updated.
         /// </summary>
         /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
+        /// <returns>An instance of Task so the method is awaitable</returns>
         /// <remarks>
         /// This method introduces a bottleneck to the asynchronous processing that
         /// happens to get here.  All routines within this context are synchronous
@@ -300,7 +301,7 @@ namespace Infrastructure.Data
                 lock (_AlbumsLock)
                 {
                     //  1.  Check if track already exists
-                    var existingTrack = existingAlbum.Tracks.FirstOrDefault(t => t.Title == newTrack.Title);
+                    var existingTrack = existingAlbum.Tracks.FirstOrDefault(t => t.Title.ToLowerInvariant() == newTrack.Title.ToLowerInvariant());
                     if (existingTrack != null)
                     {
                         //      1a. Update all the track related fields

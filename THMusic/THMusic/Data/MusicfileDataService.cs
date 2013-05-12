@@ -43,10 +43,15 @@ namespace THMusic.Data
         private readonly AbstractFactory<Genre> _genreFactory;
 
         /// <summary>
-        /// Ctor:
+        /// Crot:
         /// </summary>
-        /// <param name="MusicFileService">Injected instance of MusicFileService</param>
-        /// <param name="AlbumRepository">Injected instance of AlbumRepository</param>
+        /// <param name="MusicFileService">Instance of the MusicFileService</param>
+        /// <param name="LastFMService">Instance of the LastFMService</param>
+        /// <param name="AlbumRepository">Instance of the AlbumRepository</param>
+        /// <param name="AlbumFactory">Instance of the AlbumFactory</param>
+        /// <param name="TrackFactory">Instance of the TrackFactory</param>
+        /// <param name="ArtistFactory">Instance of the ArtistFactory</param>
+        /// <param name="GenreFactory">Instance of the GenreFactory</param>
         public MusicFileDataService(IMusicFileService MusicFileService,
                                     ILastFMService LastFMService,
                                     IAlbumRepository AlbumRepository, 
@@ -81,6 +86,15 @@ namespace THMusic.Data
 
         //  Take in the files and the current grouping
         //  Return the list of Id's for the current grouping
+        /// <summary>
+        /// Takes the selected audio files and processed them by retrieving the 
+        /// metadata describing the track,  It calls the LastFMService to retrieve
+        /// the image information and then calls the AlbumRepository to add the
+        /// track to the album
+        /// </summary>
+        /// <param name="MusicFiles">The collection of audio files</param>
+        /// <param name="Grouping">The grouping type currently showing on the main page</param>
+        /// <returns>A list containing the id of the groups affected by the addition of the tracks</returns>
         public async Task<List<int>> ProcessMusicFiles(IReadOnlyList<StorageFile> MusicFiles, GroupTypeEnum Grouping)
         {
             //List<int> affectedGroups = new List<int>();

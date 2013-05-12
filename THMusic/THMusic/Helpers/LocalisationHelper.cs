@@ -62,8 +62,9 @@ namespace THMusic.Helpers
         /// the Group categories: Artist, Genre, Playlist, Album.
         /// The string is localised to tha language and culture.
         /// </summary>
-        /// <param name="number"></param>
-        /// <param name="duration"></param>
+        /// <param name="number">The number of items in the group to be localised</param>
+        /// <param name="duration">The total duration to be localised</param>
+        /// <param name="groupType">The group type</param>
         /// <returns>The formatted string.</returns>
         public static string LocaliseDescription(int number, TimeSpan duration, GroupTypeEnum groupType)
         {

@@ -10,6 +10,9 @@
 
 namespace Core.Model.ConcreteClasses
 {
+    /// <summary>
+    /// Concrete representation of the abstract <see cref="Core.Model.Genre"/> class.
+    /// </summary>
     public class ConcreteGenre : Genre
     {
     }

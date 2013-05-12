@@ -21,6 +21,10 @@ using Core.Services;
 
 namespace Infrastructure.Helpers
 {
+    /// <summary>
+    /// This <c>MusicFileHelper</c> class is responsible for handling the 
+    /// access to the audio file with the Taglib# library
+    /// </summary>
     public static class MusicFileHelper
     {
         /// <summary>
@@ -28,8 +32,7 @@ namespace Infrastructure.Helpers
         /// The main folder is defaulted to the User's Music Library as a 
         /// Known folder
         /// </summary>
-        /// <param name="fileName">The name of the music file, no path information</param>
-        /// <param name="subFolder">The subfolder within the Music Library, often represents the Artist</param>
+        /// <param name="musicFile">The instance of the music file to be read.</param>
         /// <returns>An instance of the music file, includeing Tag information</returns>
         public static async Task<TagLib.File> GetMusicFileInfoAsync(StorageFile musicFile)
         {

@@ -27,14 +27,15 @@ namespace THMusic.Data
         /// </summary>
         /// <param name="Id">The Id of the Group</param>
         /// <param name="Type">The Type of the Group</param>
-        /// <param name="ArtistRepository">Instance of the ArtistRepository</param>
         /// <returns></returns>
         Task<string> LoadGroupNameAsync(int Id, GroupTypeEnum Type);
         /// <summary>
         /// Helper method to load the GroupModel that supports the MainViewModel
         /// with the corresponding group category.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="Id">The Id of the Group</param>
+        /// <param name="Type">The Type of the Group</param>
+        /// <returns>thje name of the group</returns>
         Task<List<AlbumModel>> LoadAlbumsAsync(int Id, GroupTypeEnum Type);
 
     }

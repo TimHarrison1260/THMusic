@@ -184,10 +184,11 @@ namespace Infrastructure.Repositories
         /// <summary>
         /// Add a new track to an existing album.
         /// </summary>
-        /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
-        public async Task AddTrackToAlbum(Album entity)
+        /// <param name="Entity">The new track, encapsulated within an album</param>
+        /// <returns>A Task so that the method is awaitable</returns>
+        public async Task AddTrackToAlbum(Album Entity)
         {
-            await _unitOrWork.AddTrackToAlbum(entity);
+            await _unitOrWork.AddTrackToAlbum(Entity);
         }
 
     }

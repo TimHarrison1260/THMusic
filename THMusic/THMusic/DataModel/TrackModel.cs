@@ -36,6 +36,9 @@ namespace THMusic.DataModel
             PlayTrackCommand = new RelayCommand(PlayTrackHandler);
         }
 
+        /// <summary>
+        /// Handles the display of the music player.
+        /// </summary>
         public RelayCommand PlayTrackCommand { get; set; }
         private void PlayTrackHandler()
         {
@@ -121,7 +124,7 @@ namespace THMusic.DataModel
 
         /// <summary>
         /// Gets or sets the LastFM Url for the Track information.
-        /// 
+        /// </summary>  
         public string LastFMUrl
         {
             get { return _url; }
@@ -151,6 +154,9 @@ namespace THMusic.DataModel
             }
         }
 
+        /// <summary>
+        /// Gets or sets the path for the audio file
+        /// </summary>
         public string MediaFilePath
         {
             get 
@@ -167,6 +173,9 @@ namespace THMusic.DataModel
             }
         }
 
+        /// <summary>
+        /// Gets a boolean indicating if the track is playable, ie it has a media file path.
+        /// </summary>
         public bool IsPlayable
         {
             get 
@@ -176,6 +185,9 @@ namespace THMusic.DataModel
             }
         }
 
+        /// <summary>
+        /// Gets the current seting of the boolean used to control the display of the media player
+        /// </summary>
         private bool _playMe = false;
         public bool PlayMe
         {

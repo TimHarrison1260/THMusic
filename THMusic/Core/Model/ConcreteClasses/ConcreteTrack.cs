@@ -10,6 +10,9 @@
 
 namespace Core.Model.ConcreteClasses
 {
+    /// <summary>
+    /// Concrete representation of the abstract <see cref="Core.Model.Track"/> class.
+    /// </summary>
     public class ConcreteTrack : Track
     {
     }

@@ -43,11 +43,13 @@ namespace THMusic.Data
         /// </summary>
         private static ResourceLoader _loader = new ResourceLoader();
 
-
         /// <summary>
         /// ctor: Initialise the AlbumModelDataService
         /// </summary>
-        /// <param name="AlbumRepository"></param>
+        /// <param name="AlbumRepository">Instance of the AlbumRepository</param>
+        /// <param name="ArtistRepository">Instance of the ArtistRepository</param>
+        /// <param name="GenreRepository">Instance of the GenreRepository</param>
+        /// <param name="PlaylistRepository">Instance of the PlaylistRepository</param>
         public AlbumModelDataService(IAlbumRepository AlbumRepository, IArtistRepository ArtistRepository, IGenreRepository GenreRepository, IPlaylistRepository PlaylistRepository)
         {
             if (AlbumRepository == null)
@@ -71,8 +73,7 @@ namespace THMusic.Data
         /// </summary>
         /// <param name="Id">The Id of the Group</param>
         /// <param name="Type">The Type of the Group</param>
-        /// <param name="ArtistRepository">Instance of the ArtistRepository</param>
-        /// <returns></returns>
+        /// <returns>Returns the Group name, Artist, Genre or Playlist</returns>
         public async Task<string> LoadGroupNameAsync(int Id, GroupTypeEnum Type)
         {
             string name = string.Empty;
@@ -99,10 +100,11 @@ namespace THMusic.Data
         /// Helper method to load the GroupModel that supports the MainViewModel
         /// with the corresponding group category.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="Id">The Id of the Group</param>
+        /// <param name="Type">The Type of the Group</param>
+        /// <returns>A collection of the AlbumModel used in the page.</returns>
         public async Task<List<AlbumModel>> LoadAlbumsAsync(int Id, GroupTypeEnum Type)
         {
-            //  TODO: convert this to accept the Group Type parameter.  Only use Artist for now.
             var albumsViewModel = new List<AlbumModel>();
 
             //  Call the repository 

@@ -64,7 +64,9 @@ namespace Core.Model
         /// </remarks>
         [XmlIgnore()]
         public List<Track> Tracks { get; set; }
+        /// <summary>
+        /// Gets or sets the TrackIds corresponding to the Tracks
+        /// </summary>
         public List<int> TrackIds { get; set; }
-        //  TODO: include logic to ensure update is successful to both properties setting only one of them.
     }
 }

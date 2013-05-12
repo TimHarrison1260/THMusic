@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\THMusic.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -103,6 +104,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\NamespaceDoc.cs" />
     <Compile Include="CustomControls\AlbumAndTrackPlayer.xaml.cs">
       <DependentUpon>AlbumAndTrackPlayer.xaml</DependentUpon>
     </Compile>
@@ -118,12 +120,18 @@
     <Compile Include="CustomControls\MusicPlayer.xaml.cs">
       <DependentUpon>MusicPlayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\NamespaceDoc.cs" />
     <Compile Include="DataModel\AlbumModel.cs" />
     <Compile Include="DataModel\GroupTypeEnum.cs" />
     <Compile Include="DataModel\WikiModel.cs" />
     <Compile Include="DataModel\TrackModel.cs" />
     <Compile Include="DataModel\GenreModel.cs" />
     <Compile Include="DataModel\GroupModel.cs" />
+    <Compile Include="Data\NamespaceDoc.cs" />
+    <Compile Include="Design\DesignAlbumModelDataService.cs" />
+    <Compile Include="Design\DesignLastFMModelDataService.cs" />
+    <Compile Include="Design\DesignMusicFileDataService.cs" />
+    <Compile Include="Design\NamespaceDoc.cs" />
     <Compile Include="Helpers\ImageLoader.cs" />
     <Compile Include="Data\AlbumModelDataService.cs" />
     <Compile Include="Data\IMuisicFileDataService.cs" />
@@ -137,13 +145,16 @@
     <Compile Include="Data\LastFMModelDataservice.cs" />
     <Compile Include="Design\DesignGroupModelDataService.cs" />
     <Compile Include="Helpers\LocalisationHelper.cs" />
+    <Compile Include="Helpers\NamespaceDoc.cs" />
     <Compile Include="ImportLastFM.xaml.cs">
       <DependentUpon>ImportLastFM.xaml</DependentUpon>
     </Compile>
     <Compile Include="ItemsPage.xaml.cs">
       <DependentUpon>ItemsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Navigation\INavigationService.cs" />
+    <Compile Include="Navigation\NamespaceDoc.cs" />
     <Compile Include="Navigation\NavigationService.cs" />
     <Compile Include="SplitPage.xaml.cs">
       <DependentUpon>SplitPage.xaml</DependentUpon>
@@ -158,6 +169,7 @@
     <Compile Include="ViewModel\AlbumsViewModel.cs" />
     <Compile Include="ViewModel\LastFMViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\NamespaceDoc.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +180,7 @@
     <None Include="packages.config" />
     <PRIResource Include="Strings\en-US\Resources.resw" />
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
+    <PRIResource Include="Strings\de-DE\Resources.resw" />
     <None Include="TagLibExample_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -177,11 +190,14 @@
     <Content Include="Assets\DarkSideOfTheMoonMedium.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
+    <Content Include="Assets\SpeakToMe.wma" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\LightGray.png" />
     <Content Include="Assets\MediumGray.png" />
     <Content Include="Assets\DarkGray.png" />
+    <Content Include="Assets\wywhLarge.png" />
+    <Content Include="Assets\wywhMedium.png" />
     <Content Include="MVVMLight.Nuget.Readme.txt" />
   </ItemGroup>
   <ItemGroup>

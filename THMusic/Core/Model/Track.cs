@@ -90,6 +90,9 @@ namespace Core.Model
         /// </summary>
         public string Url { get; set; }
 
+        /// <summary>
+        /// Gets or sets the path to the audio file.
+        /// </summary>
         public string mediaFilePath { get; set; }
         /// <summary>
         /// Gets or sets the navigation reference to the Album this track belongs to.
@@ -113,6 +116,9 @@ namespace Core.Model
         /// </remarks>
         [XmlIgnore()]
         public Album Album { get; set; }
+        /// <summary>
+        /// Gets or sets the albumId corresponding to the Album
+        /// </summary>
         [XmlElement("Album")]
         public int AlbumId { get; set; }
         //  TODO: include logic to ensure update is successful to both properties setting only one of them.

@@ -25,17 +25,27 @@ using Windows.Storage;
 namespace THMusic.ViewModel
 {
     /// <summary>
-    /// This class contains properties that the main View can data bind to.
+    /// This <c>MainViewModel</c> is responsible for managing access to the information required
+    /// by the Group summary (main) page.  It is the application main page, and shows the albums
+    /// within the collection summarised by Artist (the default) or by Genre or Playlist.
     /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
+    /// The data is not loaded from the constructor, rather the load is triggered from the LoadState
+    /// method in the code bihind.  this avoid calling the asynchronous load method from the
+    /// constructor which is not a good idea as deadlocks can occur especially if the medhod
+    /// is being called from the UI, which it would be.
     /// </para>
     /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
+    /// The UniqueId property consists of a <see cref="THMusic.DataModel.GroupId"/>, which is made 
+    /// up of the <see cref="THMusic.DataModel.GroupTypeEnum"/> the Id of the corresponding grouping 
+    /// type.
     /// </para>
     /// </summary>
+    /// <remarks>
+    /// This class contains properties that the main View can data bind to.
+    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
+    /// You can also use Blend to data bind with the tool's support.
+    /// See http://www.galasoft.ch/mvvm
+    /// </remarks>
     public class MainViewModel : ViewModelBase
     {
         private IGroupModelDataService _dataService;
@@ -46,8 +56,9 @@ namespace THMusic.ViewModel
         /// <summary>
         /// ctor: Initialised a new instance of the MainViewModel class
         /// </summary>
-        /// <param name="ArtistRepository">A reference to the ArtistRepository, injected at runtime</param>
-        /// <param name="LastFMService">A reference to the LastFMService, injected at runtime.</param>
+        /// <param name="GroupModelDataService">Instance of the GroupModelDataService</param>
+        /// <param name="MusicFileDataService">Instance of the MusicFileDataService</param>
+        /// <param name="NavigationService">Instance of the Navigation service</param>
         /// <remarks>
         /// This follows the example supplied by the MVVMLight framework with modifications to use
         /// constructor injection via the SimpleIoC container.
@@ -67,11 +78,6 @@ namespace THMusic.ViewModel
             //  Set up the data
             if (IsInDesignMode)
             {
-                //  TODO: refactor the MainModelHelper to be an injected reference
-                //          This will allow a design time version to be injected that doesn't
-                //          use Async calls and have a static version in the UI.Data layer
-                //          alongside the DesignTimeRepositories.
-
                 // Code runs in Blend --> create design time data.
                 LoadGroupsAsync();
             }
@@ -100,6 +106,9 @@ namespace THMusic.ViewModel
         //  ************************  Properties for binding   **************************
 
         //  Select the grouping required to display
+        /// <summary>
+        /// Indicates if the Group currently displayed is an Artist
+        /// </summary>
         public bool IsGroupArtist
         {
             get { return (_grouping == GroupTypeEnum.Artist) ? true: false; }
@@ -109,6 +118,9 @@ namespace THMusic.ViewModel
             }
         }
 
+        /// <summary>
+        /// Indicates if the Group currently displayed is an Genre
+        /// </summary>
         public bool IsGroupGenre
         {
             get { return (_grouping == GroupTypeEnum.Genre) ? true: false; }
@@ -118,6 +130,9 @@ namespace THMusic.ViewModel
             }
         }
 
+        /// <summary>
+        /// Indicates if the Group currently displayed is a Playlist
+        /// </summary>
         public bool IsGroupPlaylist
         {
             get { return (_grouping == GroupTypeEnum.Playlist) ? true: false; }
@@ -128,6 +143,10 @@ namespace THMusic.ViewModel
         }
 
         private GroupTypeEnum _grouping = GroupTypeEnum.Artist;  //    Default is grouped by Artist
+        /// <summary>
+        /// Sets the current display grouping
+        /// </summary>
+        /// <param name="selectedGrouping">The selected grouping</param>
         private void SetGrouping(GroupTypeEnum selectedGrouping)
         {
             //  Set the _grouping to that selected
@@ -142,6 +161,9 @@ namespace THMusic.ViewModel
         }
 
         private bool _isRefreshVisible = false;
+        /// <summary>
+        /// Indicates if the Refresh data button is visible.
+        /// </summary>
         public bool IsRefreshVisible
         {
             get { return _isRefreshVisible; }
@@ -152,12 +174,15 @@ namespace THMusic.ViewModel
             }
         }
 
-
+        /// <summary>
+        /// Gets the Application name, which is localised
+        /// </summary>
         public string AppName
         {
             get { return GetLocalisedAppName(); }
         }
 
+        //  calls the helper class to localise the application name
         private string GetLocalisedAppName()
         {
             return Helpers.LocalisationHelper.LocaliseAppName(_grouping);
@@ -165,6 +190,9 @@ namespace THMusic.ViewModel
 
         
         private List<GroupModel> _groups;
+        /// <summary>
+        /// Gets or sets the collection Groups on the page
+        /// </summary>
         public List<GroupModel> Groups
         {
             get { return _groups; }
@@ -193,6 +221,9 @@ namespace THMusic.ViewModel
 
 
         private GroupModel _selectedGroup;
+        /// <summary>
+        /// Gets or sets the currently selected group, via the UI
+        /// </summary>
         public GroupModel SelectedGroup
         {
             get { return _selectedGroup; }
@@ -227,16 +258,20 @@ namespace THMusic.ViewModel
         //  ************************  Commands for binding   ****************************
         //  ************************  Commands for binding   ****************************
         //  ************************  Commands for binding   ****************************
+        /// <summary>
+        /// Handles the ImportLastFMCommand, raised by the LastFM button on the bottom appbar
+        /// </summary>
         public RelayCommand ImportLastFMCommand { get; set; }
-
         private void ImportLastFMHandler()
         {
             //  Navigate away to the Import page for LastFM information.
             _navigator.Navigate(typeof(ImportLastFM));
         }
 
+        /// <summary>
+        /// Handles the ImportMP3Command, raise by the Import MP3 button on the bottom appvar
+        /// </summary>
         public RelayCommand ImportMP3Command { get; set; }
-
         private async void ImportMP3Handler()
         {
             //  Handle this in the UI, it's a UI element.
@@ -244,9 +279,9 @@ namespace THMusic.ViewModel
             // Set up and launch the Open Picker
             FileOpenPicker fileOpenPicker = new FileOpenPicker();
             fileOpenPicker.ViewMode = PickerViewMode.List;
-            fileOpenPicker.FileTypeFilter.Add(".mp3");
-            fileOpenPicker.FileTypeFilter.Add(".m4a");
-            fileOpenPicker.FileTypeFilter.Add(".wma");
+            fileOpenPicker.FileTypeFilter.Add(".mp3");  //  General
+            fileOpenPicker.FileTypeFilter.Add(".m4a");  //  iTunes
+            fileOpenPicker.FileTypeFilter.Add(".wma");  //  Windows media
             fileOpenPicker.CommitButtonText = "Import";
             fileOpenPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
             IReadOnlyList<StorageFile> files = await fileOpenPicker.PickMultipleFilesAsync();
@@ -279,8 +314,11 @@ namespace THMusic.ViewModel
 
         }
 
-        public RelayCommand RefreshGroupingCommand { get; set; }
 
+        /// <summary>
+        /// Handles the RefreshGroupingCommand raised by the Refresh data button on the top appbar
+        /// </summary>
+        public RelayCommand RefreshGroupingCommand { get; set; }
         private async void RefreshGroupingHandler()
         {
             //  Hide the Refresh button

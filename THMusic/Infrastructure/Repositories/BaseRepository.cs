@@ -37,6 +37,7 @@ namespace Infrastructure.Repositories
         /// Updates the instance of the specified entity in the in-memory context
         /// </summary>
         /// <param name="entity">the entity to be updated</param>
+        /// <returns>An instance of Task so that the method is awaitable</returns>
         public virtual async Task UpdateAsync(T entity)
         {
             throw new NotImplementedException();
@@ -45,6 +46,7 @@ namespace Infrastructure.Repositories
         /// Deletes the instance of the entity fromt he in-memory context
         /// </summary>
         /// <param name="entity">the entity to be deleted</param>
+        /// <returns>An instance of Task so that the method is awaitable</returns>
         public virtual async Task DeleteAsync(T entity)
         {
             throw new NotImplementedException();

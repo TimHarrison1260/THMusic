@@ -15,11 +15,22 @@ using Core.Model.ConcreteClasses;
 
 namespace Core.Factories
 {
+    /// <summary>
+    /// This <c>TrackFactory</c> is the factory class used to 
+    /// generate instances of the <see cref="Core.Model.Track"/> class.
+    /// It derives from the base <see cref="Core.Factories.AbstractFactory"/>
+    /// class specifying the type of <c>Track</c>.
+    /// </summary>
     public class TrackFactory : AbstractFactory<Track>
     {
         private readonly AbstractFactory<Artist> _artistFactory;
         private readonly AbstractFactory<Album> _albumFactory;
 
+        /// <summary>
+        /// Constructor for the TrackFactory.
+        /// </summary>
+        /// <param name="ArtistFactory">Instance of the ArtistFactory</param>
+        /// <param name="AlbumFactory">Instance of the AlbumFactory</param>
         public TrackFactory(AbstractFactory<Artist> ArtistFactory, AbstractFactory<Album> AlbumFactory)
         {
             if (ArtistFactory == null)
@@ -29,6 +40,12 @@ namespace Core.Factories
                 throw new ArgumentNullException("AlbumFactory", "No valid Album Factory supplied");
             _albumFactory = AlbumFactory;
         }
+
+
+        /// <summary>
+        /// Create the concrete implementation of the abstract Track class
+        /// </summary>
+        /// <returns>New instance of ConcreteTrack</returns>
         public override Track Create()
         {
             var newTrack = new ConcreteTrack()

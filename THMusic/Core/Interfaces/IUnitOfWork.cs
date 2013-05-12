@@ -16,6 +16,11 @@ using Core.Model;
 
 namespace Core.Interfaces
 {
+    /// <summary>
+    /// This <c>IUnitOfWorkRepository</c> interface describes the contract
+    /// for the <see cref="Infrastructure.Data.MusicCollection"/> in-memory
+    /// context.
+    /// </summary>
     public interface IUnitOfWork
     {
         /// <summary>
@@ -55,6 +60,7 @@ namespace Core.Interfaces
         /// entities and ensuring the navigation properties are correctly updated.
         /// </summary>
         /// <param name="UpdatedAlbum">The new track, encapsulated within an album</param>
+        /// <returns>An instance of the Task</returns>
         Task AddTrackToAlbum(Album UpdatedAlbum);
 
         /// <summary>

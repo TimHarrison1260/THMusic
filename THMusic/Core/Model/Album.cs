@@ -76,7 +76,11 @@ namespace Core.Model
         /// </summary>
         public List<Genre> Genres { get; set; }
 
-
+        /// <summary>
+        /// Updates or adds the Image for this instance of Album
+        /// </summary>
+        /// <param name="size">The siae of the image being added or updated</param>
+        /// <param name="Url">The url to the image being added or updated</param>
         public void UpdateImage(string size, string Url)
         {
             var imageFactory = new Factories.ImageFactory();
@@ -86,6 +90,10 @@ namespace Core.Model
             UpdateImage(img);
         }
 
+        /// <summary>
+        /// Updates or adds the Image for this instance of Album
+        /// </summary>
+        /// <param name="Image">The Image to be addd or updated</param>
         public void UpdateImage(Image Image)
         {
             //  See if the image is there already
@@ -118,7 +126,7 @@ namespace Core.Model
         /// child classes are safe to be a reference copy only.
         /// </para>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A shallow copy of this instance of Album</returns>
         public Album Clone()
         {
             //  Shallow copy with no Tracks.

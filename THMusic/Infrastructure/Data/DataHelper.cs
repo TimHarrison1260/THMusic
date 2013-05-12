@@ -74,6 +74,7 @@ namespace Infrastructure.Data
         /// <summary>
         /// Generate the next Unique Id for an album
         /// </summary>
+        /// <param name="UnitOfWork">The instance of the in-memory context</param>
         /// <returns>New Unique Id</returns>
         public int GenerateAlbumId(IUnitOfWork UnitOfWork)
         {
@@ -84,6 +85,7 @@ namespace Infrastructure.Data
         /// <summary>
         /// Generate the next unique Id for a Track
         /// </summary>
+        /// <param name="UnitOfWork">The instance of the in-memory context</param>
         /// <returns>New unique Id</returns>
         public int GenerateTrackId(IUnitOfWork UnitOfWork)
         {
@@ -94,6 +96,7 @@ namespace Infrastructure.Data
         /// <summary>
         /// Generate the next unique Id for an Artist
         /// </summary>
+        /// <param name="UnitOfWork">The instance of the in-memory context</param>
         /// <returns>New unique Id</returns>
         public int GenerateArtistId(IUnitOfWork UnitOfWork)
         {
@@ -104,6 +107,7 @@ namespace Infrastructure.Data
         /// <summary>
         /// Generate the next unique Id for a Genre
         /// </summary>
+        /// <param name="UnitOfWork">The instance of the in-memory context</param>
         /// <returns>New unique Id</returns>
         public int GenerateGenreId(IUnitOfWork UnitOfWork)
         {
@@ -114,6 +118,7 @@ namespace Infrastructure.Data
         /// <summary>
         /// Generate the next unique Id for a Playlist
         /// </summary>
+        /// <param name="UnitOfWork">The instance of the in-memory context</param>
         /// <returns>New Unique Id</returns>
         public int GeneratePlaylistId(IUnitOfWork UnitOfWork)
         {
@@ -130,7 +135,8 @@ namespace Infrastructure.Data
         /// <summary>
         /// Updates the Track: New Id and Album, and adds to the Tracks Collection
         /// </summary>
-        /// <param name="Track">The track to be added</param>
+        /// <param name="UnitOfWork">The instance of the in-memory context</param>
+        /// <param name="Tracks">The track to be added</param>
         /// <param name="Album">The album the track belongs to</param>
         /// <returns>The updated track</returns>
         /// <remarks>
@@ -389,7 +395,7 @@ namespace Infrastructure.Data
         /// </summary>
         /// <param name="UnitOfWork">In-Memory context</param>
         /// <param name="Artist">The Artist to be updated</param>
-        /// <param name="album">The album reference</param>
+        /// <param name="Album">The album reference</param>
         /// <returns>The updated Artist</returns>
         /// <remarks>
         /// <para>

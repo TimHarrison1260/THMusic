@@ -14,6 +14,12 @@ using Core.Services;
 
 namespace Infrastructure.Services
 {
+    /// <summary>
+    /// this <c>MusicFileMapper</c> class is responsible for mapping the 
+    /// Taglib# file format to the one used within this application
+    /// A custom class is returned instead of the taglib.file class so 
+    /// that a different tagging library could easily be substituted.
+    /// </summary>
     public static class MusicFileMapper
     {
         /// <summary>

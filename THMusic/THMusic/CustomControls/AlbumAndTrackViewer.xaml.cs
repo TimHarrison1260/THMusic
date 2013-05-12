@@ -16,6 +16,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace THMusic.CustomControls
 {
+    /// <summary>
+    /// This <c>AlbumAndTrackPlay</c> is a xaml based used control, that displays 
+    /// the album information, its related track and wiki information.  This user
+    /// control does not use the MediaPlayer user control.
+    /// </summary>
     public sealed partial class AlbumAndTrackViewer : UserControl
     {
         public AlbumAndTrackViewer()

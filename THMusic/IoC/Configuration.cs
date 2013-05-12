@@ -61,9 +61,9 @@ namespace IoC
         /// Register the Live instance of the datasource with the SimpleIoC
         /// </summary>
         /// <param name="iocKernel">the instance of the SimpleIoC container</param>
-        public static void RegisterDataSource(SimpleIoc iocKernal)
+        public static void RegisterDataSource(SimpleIoc iocKernel)
         {
-            iocKernal.Register<IUnitOfWork, MusicCollection>(true);
+            iocKernel.Register<IUnitOfWork, MusicCollection>(true);
         }
     }
 }

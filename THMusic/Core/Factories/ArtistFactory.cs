@@ -14,8 +14,18 @@ using Core.Model.ConcreteClasses;
 
 namespace Core.Factories
 {
+    /// <summary>
+    /// This <c>ArtistFactory</c> is the factory class used to 
+    /// generate instances of the <see cref="Core.Model.Artist"/> class.
+    /// It derives from the base <see cref="Core.Factories.AbstractFactory"/>
+    /// class specifying the type of <c>Artist</c>.
+    /// </summary>
     public class ArtistFactory : AbstractFactory<Artist>
     {
+        /// <summary>
+        /// Create the concrete implementation of the abstract Artist class
+        /// </summary>
+        /// <returns>New instance of ConcreteArtist</returns>
         public override Artist Create()
         {
             var newArtist = new ConcreteArtist()

@@ -31,8 +31,6 @@ namespace THMusic.Design
 
         //  Injected instances of the various repositories (Domain model)
         private readonly IArtistRepository _artistRepository;
-        //private readonly IGenreRepository _genreRepository;
-        //private readonly IPlaylistRepository _playlistRepository;
 
          /// <summary>
         /// Provides access to the resouce files, Localisation, used
@@ -43,60 +41,38 @@ namespace THMusic.Design
         /// <summary>
         /// ctor: Initialise the GroupModelDataService
         /// </summary>
-        /// <param name="AlbumRepository"></param>
+        /// <param name="ArtistRepository"></param>
         public DesignGroupModelDataService(IArtistRepository ArtistRepository) //, IGenreRepository GenreRepository, IPlaylistRepository PlaylistRepository)
         {
             if (ArtistRepository == null)
                 throw new ArgumentNullException("ArtistRepository", "No valid Repository supplied");
             _artistRepository = ArtistRepository;
-            //if (GenreRepository == null)
-            //    throw new ArgumentNullException("GenreRepository", "No valid Repository supplied");
-            //_genreRepository = GenreRepository;
-            //if (PlaylistRepository == null)
-            //    throw new ArgumentNullException("PlaylistRepository", "No valid Repository supplied");
-            //_playlistRepository = PlaylistRepository;
         }
-
 
         /// <summary>
         /// Helper method to load the GroupModel that supports the MainViewModel
         /// with the corresponding group category.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="groupType">Artist type</param>
+        /// <returns>the group models</returns>
         public async Task<List<GroupModel>> LoadAsync(GroupTypeEnum groupType = GroupTypeEnum.Artist)
         {
-            //  TODO: convert this to accept the Group Type parameter.  Only use Artist for now.
             //  Call the repository 
             var groups = new List<GroupModel>();
-
-
-            //switch (groupType)
-            //{
-            //    case GroupTypeEnum.Artist:
-            //        {
                         IEnumerable<Artist> artists = await _artistRepository.GetAll();
                         var groupRepository = _artistRepository as IGroupRepository<Artist>;
                         groups = await LoadGroupsAsync<Artist>(artists, groupType, groupRepository);
-            //            break;
-            //        }
-            //    case GroupTypeEnum.Genre:
-            //        {
-            //            IEnumerable<Genre> genres = await _genreRepository.GetAll();
-            //            var groupRepository = _genreRepository as IGroupRepository<Genre>;
-            //            groups = await LoadGroupsAsync<Genre>(genres, groupType, groupRepository);
-            //            break;
-            //        }
-            //    case GroupTypeEnum.Playlist:
-            //        {
-            //            IEnumerable<PlayList> playlists = await _playlistRepository.GetAll();
-            //            var groupRepository = _playlistRepository as IGroupRepository<PlayList>;
-            //            groups = await LoadGroupsAsync<PlayList>(playlists, groupType, groupRepository);
-            //            break;
-            //        }
-            //}
             return groups;
         }
 
+        /// <summary>
+        /// Loads the group models
+        /// </summary>
+        /// <typeparam name="T">The Artist type</typeparam>
+        /// <param name="groups">The Artists</param>
+        /// <param name="groupType">The Artist type</param>
+        /// <param name="repository">The  GroupRepository instance</param>
+        /// <returns>The Artist summaries</returns>
         private async Task<List<GroupModel>> LoadGroupsAsync<T>(IEnumerable<T> groups, GroupTypeEnum groupType, IGroupRepository<T> repository) where T : Core.Model.Group
         {
             //var artists = await _artistRepository.GetAllArtists() as List<Artist>;
@@ -131,11 +107,12 @@ namespace THMusic.Design
             return groupModels;
         }
 
-
-
-
-
-
+        /// <summary>
+        /// Not implemented
+        /// </summary>
+        /// <param name="Id">id</param>
+        /// <param name="groupType">type</param>
+        /// <returns>groupmodel</returns>
         public Task<GroupModel> LoadGroupAsync(int Id, GroupTypeEnum groupType)
         {
             throw new NotImplementedException();

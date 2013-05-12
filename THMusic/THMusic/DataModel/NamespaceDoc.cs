@@ -1,13 +1,13 @@
 ﻿
-namespace THMusic.DataModel
+namespace THMusic.Design
 {
     /// <summary>
     /// The Namespace <c>THMusic.DataModel</c> is part of the <c>THMusic</c> project and
-    /// contains the UI layer of the application.
-    /// 
-    /// 
-    ///     ADD MORE INFORMATION HERE
-    /// 
+    /// contains the Data models that support the UI directly.  They are UI representations 
+    /// of the data required to support each view.  They are located within the DataModel folder.  
+    /// Each model implements the ObservableObject base class provided by the MVVMLight framework.  
+    /// This has the expected notification of properties changing required for the UI binding.  
+    /// They are loaded through the ViewModel for each page.
     /// </summary>
     /// <remarks>
     /// The <c>Infrastructure</c> namespace contains all elements of the

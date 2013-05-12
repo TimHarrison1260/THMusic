@@ -10,6 +10,9 @@
 
 namespace Core.Model
 {
+    /// <summary>
+    /// The enumeration descbing the possible images sizes for an Album
+    /// </summary>
     public enum ImageSizeEnum
     {
         small,

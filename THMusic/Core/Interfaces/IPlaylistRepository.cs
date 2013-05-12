@@ -18,6 +18,10 @@ using Core.Model;
 
 namespace Core.Interfaces
 {
+    /// <summary>
+    /// This <c>IPlayRepository</c> interface describes the contract
+    /// for the <see cref="Infrastructure.Repositories.PlaylistRepository"/>.
+    /// </summary>
     public interface IPlaylistRepository : IGroupRepository<PlayList>
     {
     }

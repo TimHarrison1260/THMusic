@@ -36,6 +36,12 @@ namespace THMusic.Data
         /// <returns>The collection of Group summaries</returns>
         Task<List<GroupModel>> LoadAsync(GroupTypeEnum groupType);
 
+        /// <summary>
+        /// Get the Group model for a specific group id
+        /// </summary>
+        /// <param name="Id">The Id of the Group</param>
+        /// <param name="groupType">The type of the group, Artist, Genre or Playlist</param>
+        /// <returns>The populated group model</returns>
         Task<GroupModel> LoadGroupAsync(int Id, GroupTypeEnum groupType);
 
     }
